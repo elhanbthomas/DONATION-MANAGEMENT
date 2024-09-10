@@ -1,0 +1,2 @@
+# DONATION-MANAGEMENT
+A DBMS group project (SEM III)
