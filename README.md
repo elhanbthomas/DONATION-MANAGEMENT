@@ -11,8 +11,8 @@ A DBMS group project (SEM III)
 
 ## Installations for django
 <pre>
-  install virtual environment in the same folder containing frontend and backend    puthon -m venv venv  
-  activate virtual environment  ./venv/Scripts/activate  
+  install virtual environment in the same folder containing frontend and backend    python -m venv venv  
+  activate virtual environment  .\venv\Scripts\activate  
   change directory to backend  
   install dependencies using the command       pip install -r requirements.txt 
 </pre> 
