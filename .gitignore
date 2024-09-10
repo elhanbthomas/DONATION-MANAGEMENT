@@ -1,0 +1,18 @@
+venv/
+.env/
+
+db.sqlite3
+
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# IDE/editor configurations
+.vscode/
+.idea/
+*.swp
+
+# Django migration files (optional; consider whether to include migrations in version control)
+*/migrations/*
+!*/migrations/__init__.py
