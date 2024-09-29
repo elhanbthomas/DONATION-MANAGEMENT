@@ -1,0 +1,79 @@
+[33mcommit 3893ea93794394d1acf74cd91a2de87b5444f5f7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mchanges[m[33m, [m[1;31morigin/changes[m[33m)[m
+Author: Sanju-afk <ssanjay4781@gmail.com>
+Date:   Sun Sep 29 18:36:14 2024 +0530
+
+    latest models
+
+[33mcommit 46ac59b283bd4e04fc78d141adaedc5503aab65f[m
+Author: Sanju-afk <ssanjay4781@gmail.com>
+Date:   Tue Sep 17 16:40:32 2024 +0530
+
+    helloworld
+
+[33mcommit ed0ae372a2e68bf3c663606089fad2b8ba1c9306[m
+Author: Sanju-afk <ssanjay4781@gmail.com>
+Date:   Mon Sep 16 18:15:47 2024 +0530
+
+    HelloWorld
+
+[33mcommit 2750352c8ffbcf19bb5658cd513307d6d41c7bbd[m
+Author: Elhan B Thomas <147646623+elhanbthomas@users.noreply.github.com>
+Date:   Tue Sep 10 22:03:07 2024 +0530
+
+    Update README.md
+
+[33mcommit 8817471aaee35310b3ea3d0e094273d8bd549c35[m
+Author: Elhan B Thomas <147646623+elhanbthomas@users.noreply.github.com>
+Date:   Tue Sep 10 22:01:58 2024 +0530
+
+    Update README.md
+
+[33mcommit 3f1c766eed9a6039e67f875fb108944e8e64c1b8[m
+Author: Elhan B Thomas <147646623+elhanbthomas@users.noreply.github.com>
+Date:   Tue Sep 10 21:59:06 2024 +0530
+
+    Update README.md
+
+[33mcommit a5ca643b51c1ec54a1f7f4d87dd26d3f5bb1d5c8[m
+Author: Elhan B Thomas <147646623+elhanbthomas@users.noreply.github.com>
+Date:   Tue Sep 10 21:57:31 2024 +0530
+
+    Update README.md
+    
+    initial setup fore cloning
+
+[33mcommit a010de0498d725e30e95c257a13fdac9248049dc[m
+Author: elhanbthomas <elhanbthomas@gmail.com>
+Date:   Tue Sep 10 21:46:55 2024 +0530
+
+    new commit
+
+[33mcommit 5e1a48a7620168904505089c2d8226de71fcbd82[m
+Author: elhanbthomas <elhanbthomas@gmail.com>
+Date:   Tue Sep 10 21:43:51 2024 +0530
+
+    react packages
+
+[33mcommit dfc47ede7ecef5d52c6ec55632efac09a9d7465a[m
+Author: elhanbthomas <elhanbthomas@gmail.com>
+Date:   Tue Sep 10 21:39:48 2024 +0530
+
+    settup frontend
+
+[33mcommit bb9c857e80a1a9ac8a141cfe063ee9bae077fac0[m
+Author: elhanbthomas <elhanbthomas@gmail.com>
+Date:   Tue Sep 10 20:57:57 2024 +0530
+
+    settup backend for project
+
+[33mcommit fb9ddbb7dce1ca1436694f3921767b49a6161242[m
+Author: elhanbthomas <elhanbthomas@gmail.com>
+Date:   Tue Sep 10 20:56:53 2024 +0530
+
+    added git ignore
+
+[33mcommit c25aabe63746c6efad376e1ce7487419f5e556b5[m
+Author: Elhan B Thomas <147646623+elhanbthomas@users.noreply.github.com>
+Date:   Tue Sep 10 18:57:12 2024 +0530
+
+    Initial commit
