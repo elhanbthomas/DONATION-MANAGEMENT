@@ -27,7 +27,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="name"
                     placeholder="Joe Mama"
-                    onChange={handleChange}
+                    // onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -39,7 +39,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="email"
                     placeholder="joe.mama@mail.com"
-                    onChange={handleChange}
+                    // onChange={handleChange}
                 />
             </FormControl>
             <Divider />
@@ -51,7 +51,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="city"
                     placeholder="Kottayam"
-                    onChange={handleChange}
+                    // onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -62,7 +62,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
-                    onChange={handleChange}
+                    // onChange={handleChange}
                 />
             </FormControl>
             <Divider />

@@ -23,7 +23,7 @@ export default function RegistrationPage() {
                 >
                     Sign up
                 </Typography>
-                <RegFormVolunteer handleSubmit={handleSubmit} />
+                <RegFormVolunteer  />
             </Card>
         </Stack>
     </>;
