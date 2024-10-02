@@ -1,20 +1,15 @@
 import { Add, Delete } from "@mui/icons-material";
-import { Stack, FormControl, TextField, FormLabel, Fab, Box, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { Stack, FormControl, TextField, FormLabel, Fab, Box, IconButton, List, ListItem, ListItemText, withTheme } from "@mui/material";
 import * as React from "react";
 
 
-export default function PhoneNumberInput() {
-    const [nums, setNums] = React.useState([]);
+export default function PhoneNumberInput({ addNumFn, removeNumFn, nums }) {
     const [num, setNum] = React.useState(-1);
-    const handleAdd = () => {
-        setNums(nums.concat(num));
+    React.useEffect(() => {
         setNum(-1);
-    }
-    const handleNumChange = (e) => {
-        setNum(e.target.value)
-    }
+    }, [nums])
     return (
-        <Box sx={{ display: "flex", flexDirection: "column" }} >
+        <>
             <FormControl dir="row">
                 <FormLabel htmlFor="name">Phone No.</FormLabel>
                 <TextField
@@ -24,34 +19,35 @@ export default function PhoneNumberInput() {
                     id="phone"
                     placeholder="123456789"
                     type="text"
-                    value={num!=-1 ? num : ""}
-                    onChange={handleNumChange}
+                    value={num != -1 ? num : ""}
+                    onChange={(e) => setNum(e.target.value)}
                     slotProps={{
                         input: {
                             endAdornment:
-                                <IconButton size="small" color="secondary" aria-label="add" onClick={handleAdd}>
+                                <IconButton size="small" color="secondary" aria-label="add" onClick={() => num !== -1 && addNumFn(num)}>
                                     <Add />
                                 </IconButton>
                         }
                     }}
                 />
-                <List>
-                    {nums.map((item) => {
-                        <ListItem
-                            secondaryAction={
-                                <IconButton edge="end" aria-label="delete">
-                                    <Delete />
-                                </IconButton>
-                            }
-                        >
-                            <ListItemText
-                                primary={item}
-                            />
-                        </ListItem>
-                    })}
-                </List>
             </FormControl>
-
-        </Box>
+            {nums.length !== 0 && <List>
+                {nums.map((item) => {
+                    return <ListItem
+                        key={nums.indexOf(item)}
+                        secondaryAction={
+                            <IconButton size="small" edge="end" aria-label="delete" onClick={() => removeNumFn(item)} >
+                                <Delete />
+                            </IconButton>
+                        }
+                    >
+                        <ListItemText
+                            primary={item}
+                        />
+                    </ListItem>
+                })}
+            </List>
+            }
+        </>
     )
 }
