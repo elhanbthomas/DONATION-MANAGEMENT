@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Divider, FormControl, FormLabel, InputLabel, MenuItem, NativeSelect, Select, TextField, Button, Stack } from '@mui/material';
-import axios from 'axios';
+import { Box, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import PhoneNumberInput from './PhoneNumberInput';
 
 export default function RegFormVolunteer({ handleSubmit }) {
     const [age, setAge] = React.useState('');
@@ -27,7 +27,6 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="name"
                     placeholder="Joe Mama"
-                    onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -37,9 +36,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     name="email"
                     required
                     fullWidth
-                    id="email"
+                    id="name"
                     placeholder="joe.mama@mail.com"
-                    onChange={handleChange}
                 />
             </FormControl>
             <Divider />
@@ -51,7 +49,6 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="city"
                     placeholder="Kottayam"
-                    onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -62,24 +59,23 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
-                    onChange={handleChange}
                 />
             </FormControl>
+            <PhoneNumberInput />
             <Divider />
             <FormControl fullWidth>
                 <FormLabel >Qualification</FormLabel>
                 <Select
                     id="demo-simple-select"
-                    value={formData.qualification}
-                    onChange={handleChange}
-                    name='qualification'
+                    value={age}
+                    onChange={handleAgeChange}
                 >
                     <MenuItem value={"10"}>10th</MenuItem>
                     <MenuItem value={"12"}>12th</MenuItem>
                     <MenuItem value={"clg"}>College</MenuItem>
                 </Select>
             </FormControl>
-            {/* <FormControl fullWidth>
+            <FormControl fullWidth>
                 <FormLabel >Designation</FormLabel>
                 <Select
                     value={designation}
@@ -89,10 +85,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     <MenuItem value={"d2"}>D2</MenuItem>
                     <MenuItem value={"d3"}>D3</MenuItem>
                 </Select>
-            </FormControl> */}
-            <Stack direction='row' spacing={5}>
-                <Button variant="contained" color='success' type='submit'>Register</Button>
-            </Stack>
+            </FormControl>
         </Box>
     )
 }
