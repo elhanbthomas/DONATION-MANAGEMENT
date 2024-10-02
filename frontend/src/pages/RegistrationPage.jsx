@@ -3,12 +3,13 @@ import RegFormVolunteer from '../components/RegFormVolunteer.jsx';
 import * as React from 'react';
 
 export default function RegistrationPage() {
-    const handleSubmit = (e) => { e.preventDefault(); }
+    const handleSubmit = (e) => { e.preventDefault();
+        // api call
+    }
     return <>
         <Stack
             sx={{
                 justifyContent: 'center',
-                height: '100vh',
                 p: 2,
             }}
         >
@@ -16,7 +17,7 @@ export default function RegistrationPage() {
                 <Typography
                     component="h1"
                     variant="h4"
-                    sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)',  pb: 4 }}
+                    sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', pb: 4 }}
                 >
                     Sign up
                 </Typography>
