@@ -1,5 +1,5 @@
 import { Card, Stack, Typography } from '@mui/material';
-import RegForm from '../components/RegForm.jsx';
+import RegFormVolunteer from '../components/RegFormVolunteer.jsx';
 import * as React from 'react';
 
 export default function RegistrationPage() {
@@ -20,7 +20,7 @@ export default function RegistrationPage() {
                 >
                     Sign up
                 </Typography>
-                <RegForm handleSubmit={handleSubmit} />
+                <RegFormVolunteer handleSubmit={handleSubmit} />
             </Card>
         </Stack>
     </>;
