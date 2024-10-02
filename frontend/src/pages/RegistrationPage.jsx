@@ -3,7 +3,10 @@ import RegForm from '../components/RegForm.jsx';
 import * as React from 'react';
 
 export default function RegistrationPage() {
-    const handleSubmit = (e) => { e.preventDefault(); }
+    // const handleSubmit = async (e) => { 
+    //     e.preventDefault(); 
+        
+    // }
     return <>
         <Stack
             sx={{
@@ -20,7 +23,7 @@ export default function RegistrationPage() {
                 >
                     Sign up
                 </Typography>
-                <RegForm handleSubmit={handleSubmit} />
+                <RegForm />
             </Card>
         </Stack>
     </>;

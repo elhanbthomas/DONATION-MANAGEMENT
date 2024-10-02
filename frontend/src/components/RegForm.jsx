@@ -1,15 +1,50 @@
 import * as React from 'react';
-import { Box, Divider, FormControl, FormLabel, InputLabel, MenuItem, NativeSelect, Select, TextField } from '@mui/material';
+import { Box, Divider, FormControl, FormLabel, InputLabel, MenuItem, NativeSelect, Select, TextField, Button, Stack } from '@mui/material';
+import axios from 'axios';
 
-export default function RegForm({ handleSubmit }) {
-    const [age, setAge] = React.useState('');
-    const [designation, setDesignation] = React.useState('');
+export default function RegForm() {
+    // const [age, setAge] = React.useState('');
+    // const [designation, setDesignation] = React.useState('');
+    const [error, setError] = React.useState(null)
+    
+    // const handleDesignationChange = (event) => {
+    //     setDesignation(event.target.value);
+    // }
 
-    const handleAgeChange = (event) => {
-        setAge(event.target.value);
+    const [formData, SetformData] = React.useState({
+        'name': '',
+        'email': '',
+        'city': '',
+        'house': '',
+        'qualification': ''
+    });
+    
+    // const handleAgeChange = (event) => {
+    //     setAge(event.target.value);
+    //     SetformData()
+    // }
+    const handleChange = (e) => {
+        // setAge(e.target.value);
+        SetformData({
+            ...formData,
+            [e.target.name]:e.target.value
+        })
     }
-    const handleDesignationChange = (event) => {
-        setDesignation(event.target.value);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        
+        try{
+            const response = await axios.post('http://127.0.0.1:8000/api/register', formData, {
+                headers:{
+                    "Content-Type":'application/json',
+                },
+
+            });
+        }
+        catch(err){
+            setError(err)
+        }
     }
     return (
         <Box
@@ -26,6 +61,7 @@ export default function RegForm({ handleSubmit }) {
                     fullWidth
                     id="name"
                     placeholder="Joe Mama"
+                    onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -35,8 +71,9 @@ export default function RegForm({ handleSubmit }) {
                     name="email"
                     required
                     fullWidth
-                    id="name"
+                    id="email"
                     placeholder="joe.mama@mail.com"
+                    onChange={handleChange}
                 />
             </FormControl>
             <Divider />
@@ -48,6 +85,7 @@ export default function RegForm({ handleSubmit }) {
                     fullWidth
                     id="city"
                     placeholder="Kottayam"
+                    onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -58,6 +96,7 @@ export default function RegForm({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
+                    onChange={handleChange}
                 />
             </FormControl>
             <Divider />
@@ -65,15 +104,16 @@ export default function RegForm({ handleSubmit }) {
                 <FormLabel >Qualification</FormLabel>
                 <Select
                     id="demo-simple-select"
-                    value={age}
-                    onChange={handleAgeChange}
+                    value={formData.qualification}
+                    onChange={handleChange}
+                    name='qualification'
                 >
                     <MenuItem value={"10"}>10th</MenuItem>
                     <MenuItem value={"12"}>12th</MenuItem>
                     <MenuItem value={"clg"}>College</MenuItem>
                 </Select>
             </FormControl>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
                 <FormLabel >Designation</FormLabel>
                 <Select
                     value={designation}
@@ -83,7 +123,10 @@ export default function RegForm({ handleSubmit }) {
                     <MenuItem value={"d2"}>D2</MenuItem>
                     <MenuItem value={"d3"}>D3</MenuItem>
                 </Select>
-            </FormControl>
+            </FormControl> */}
+            <Stack direction='row' spacing={5}>
+                <Button variant="contained" color='success' type='submit'>Register</Button>
+            </Stack>
         </Box>
     )
 }
