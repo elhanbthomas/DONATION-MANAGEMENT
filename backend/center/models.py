@@ -23,6 +23,9 @@ class Volounteer(models.Model):
     qualification = models.CharField(max_length=255, null=True)
     designation = models.CharField(max_length=255, null=True)
     Center_id = models.ForeignKey(Center, on_delete = models.PROTECT, blank=True, null=True)
+    
+    def __str(self):
+        return self.v_id + " " + self.name
 
     
 # class PhoneCenter(models.Model):
@@ -40,6 +43,9 @@ class Volounteer(models.Model):
 class PhoneVolounteer(models.Model):
     volunteer = models.ForeignKey(Volounteer, on_delete=models.CASCADE)
     number = models.CharField(max_length=10, blank=True, null=True)
+    
+    def __str__(self):
+        return self.number
 
 # class VolounteerPickup(models.Model):
 #     VolounteerPickupID = models.IntegerField(primary_key=True)
