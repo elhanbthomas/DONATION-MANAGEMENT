@@ -1,17 +1,20 @@
 import * as React from 'react';
-import { Box, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import PhoneNumberInput from './PhoneNumberInput';
+import { Save } from '@mui/icons-material';
 
 export default function RegFormVolunteer({ handleSubmit }) {
-    const [age, setAge] = React.useState('');
-    const [designation, setDesignation] = React.useState('');
+    const [data, setData] = React.useState({
+        name: '',
+        email: '',
+        city: '',
+        house: '',
+        phone: [],
+        qual: '',
+        designation: '',
+        age: '',
+    })
 
-    const handleAgeChange = (event) => {
-        setAge(event.target.value);
-    }
-    const handleDesignationChange = (event) => {
-        setDesignation(event.target.value);
-    }
     return (
         <Box
             component="form"
@@ -26,6 +29,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="name"
+                    value={data.name}
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
                     placeholder="Joe Mama"
                 />
             </FormControl>
@@ -37,6 +42,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="name"
+                    value={data.email}
+                    onChange={(e) => setData({ ...data, email: e.target.value })}
                     placeholder="joe.mama@mail.com"
                 />
             </FormControl>
@@ -48,6 +55,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="city"
+                    value={data.city}
+                    onChange={(e) => setData({ ...data, city: e.target.value })}
                     placeholder="Kottayam"
                 />
             </FormControl>
@@ -59,16 +68,17 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
+                    value={data.house}
+                    onChange={(e) => setData({ ...data, house: e.target.value })}
                 />
             </FormControl>
-            <PhoneNumberInput />
+            <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
             <Divider />
             <FormControl fullWidth>
                 <FormLabel >Qualification</FormLabel>
                 <Select
-                    id="demo-simple-select"
-                    value={age}
-                    onChange={handleAgeChange}
+                    value={data.qual}
+                    onChange={(e) => setData({ ...data, qual: e.target.value })}
                 >
                     <MenuItem value={"10"}>10th</MenuItem>
                     <MenuItem value={"12"}>12th</MenuItem>
@@ -78,13 +88,16 @@ export default function RegFormVolunteer({ handleSubmit }) {
             <FormControl fullWidth>
                 <FormLabel >Designation</FormLabel>
                 <Select
-                    value={designation}
-                    onChange={handleDesignationChange}
+                    value={data.designation}
+                    onChange={(e) => setData({ ...data, designation: e.target.value })}
                 >
                     <MenuItem value={"d1"}>D1</MenuItem>
                     <MenuItem value={"d2"}>D2</MenuItem>
                     <MenuItem value={"d3"}>D3</MenuItem>
                 </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+                <Button variant="contained" type="submit" startIcon={<Save />} onClick={() => handleSubmit(data)}>Submit</Button>
             </FormControl>
         </Box>
     )
