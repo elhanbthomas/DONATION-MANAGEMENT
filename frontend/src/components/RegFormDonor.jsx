@@ -29,6 +29,7 @@ export default function RegFormDonor({ handleSubmit }) {
                     value={data.name}
                     onChange={(e) => setData({ ...data, name: e.target.value })}
                     placeholder="Joe Mama"
+                    // onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -42,6 +43,7 @@ export default function RegFormDonor({ handleSubmit }) {
                     value={data.email}
                     onChange={(e) => setData({ ...data, email: e.target.value })}
                     placeholder="joe.mama@mail.com"
+                    // onChange={handleChange}
                 />
             </FormControl>
             <Divider />
@@ -55,6 +57,7 @@ export default function RegFormDonor({ handleSubmit }) {
                     value={data.city}
                     onChange={(e) => setData({ ...data, city: e.target.value })}
                     placeholder="Kottayam"
+                    // onChange={handleChange}
                 />
             </FormControl>
             <FormControl>
@@ -65,8 +68,6 @@ export default function RegFormDonor({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
-                    value={data.house}
-                    onChange={(e) => setData({ ...data, house: e.target.value })}
                 />
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
