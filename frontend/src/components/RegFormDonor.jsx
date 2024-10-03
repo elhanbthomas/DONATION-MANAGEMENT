@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { Box, Divider, FormControl, FormLabel, InputLabel, MenuItem, NativeSelect, Select, TextField } from '@mui/material';
+import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import PhoneNumberInput from './PhoneNumberInput';
+import { Save } from '@mui/icons-material';
 
-export default function RegFormVolunteer({ handleSubmit }) {
-    const [age, setAge] = React.useState('');
-    const [designation, setDesignation] = React.useState('');
+export default function RegFormDonor({ handleSubmit }) {
+    const [data, setData] = React.useState({
+        name: '',
+        email: '',
+        city: '',
+        house: '',
+        phone: [],
+    })
 
-    const handleAgeChange = (event) => {
-        setAge(event.target.value);
-    }
-    const handleDesignationChange = (event) => {
-        setDesignation(event.target.value);
-    }
     return (
         <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={() => handleSubmit(data)}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
             <FormControl>
@@ -25,6 +26,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="name"
+                    value={data.name}
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
                     placeholder="Joe Mama"
                 />
             </FormControl>
@@ -36,6 +39,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="name"
+                    value={data.email}
+                    onChange={(e) => setData({ ...data, email: e.target.value })}
                     placeholder="joe.mama@mail.com"
                 />
             </FormControl>
@@ -47,6 +52,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="city"
+                    value={data.city}
+                    onChange={(e) => setData({ ...data, city: e.target.value })}
                     placeholder="Kottayam"
                 />
             </FormControl>
@@ -58,31 +65,13 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     fullWidth
                     id="house"
                     placeholder="9/11"
+                    value={data.house}
+                    onChange={(e) => setData({ ...data, house: e.target.value })}
                 />
             </FormControl>
-            <Divider />
-            <FormControl fullWidth>
-                <FormLabel >Qualification</FormLabel>
-                <Select
-                    id="demo-simple-select"
-                    value={age}
-                    onChange={handleAgeChange}
-                >
-                    <MenuItem value={"10"}>10th</MenuItem>
-                    <MenuItem value={"12"}>12th</MenuItem>
-                    <MenuItem value={"clg"}>College</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl fullWidth>
-                <FormLabel >Designation</FormLabel>
-                <Select
-                    value={designation}
-                    onChange={handleDesignationChange}
-                >
-                    <MenuItem value={"d1"}>D1</MenuItem>
-                    <MenuItem value={"d2"}>D2</MenuItem>
-                    <MenuItem value={"d3"}>D3</MenuItem>
-                </Select>
+            <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
+            <FormControl fullWidth sx={{ mt: 2 }}>
+                <Button variant="outlined" type="submit" startIcon={<Save size="small"/>} >Submit</Button>
             </FormControl>
         </Box>
     )

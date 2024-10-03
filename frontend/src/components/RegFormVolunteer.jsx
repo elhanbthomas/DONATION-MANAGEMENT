@@ -12,13 +12,12 @@ export default function RegFormVolunteer({ handleSubmit }) {
         phone: [],
         qual: '',
         designation: '',
-        age: '',
     })
 
     return (
         <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={() => handleSubmit(data)}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
             <FormControl>
@@ -97,7 +96,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-                <Button variant="contained" type="submit" startIcon={<Save />} onClick={() => handleSubmit(data)}>Submit</Button>
+                <Button variant="outlined" type="submit" startIcon={<Save size="small"/>} >Submit</Button>
             </FormControl>
         </Box>
     )
