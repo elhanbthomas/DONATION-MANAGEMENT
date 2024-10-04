@@ -21,7 +21,6 @@ class VolunteerSerializer(serializers.ModelSerializer):
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
-    confirm_pass = serializers.CharField(write_only = True)
     profile = VolunteerSerializer(write_only=True)
     
     class Meta:
@@ -78,7 +77,6 @@ class DonorSerializer(serializers.ModelSerializer):
 
 class DonorRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
-    confirm_pass = serializers.CharField(write_only = True)
     profile = DonorSerializer(write_only=True)
     
     class Meta:
