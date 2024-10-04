@@ -24,6 +24,8 @@ class ItemPickup(models.Model):
     description = models.TextField()
     Volounteer_id = models.ForeignKey(Volounteer,on_delete=models.CASCADE)
     Center_id = models.ForeignKey(Center, on_delete= models.CASCADE)
+    
+    
 class Items(models.Model):
     Item_id = models.CharField(primary_key=True, max_length=5)
     Pickup_id = models.ForeignKey(ItemPickup, on_delete=models.CASCADE)
