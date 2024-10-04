@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from center.models import Volounteer, PhoneVolounteer
         
+# -------------------------------------------- VOLUNTEER REGISTRATION --------------------------------------
         
 class VolunteerPhoneSerializer(serializers.ModelSerializer):
 
@@ -25,19 +26,16 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'password', 'confirm_pass', 'profile']
+        fields = ['username', 'password', 'profile']
     
     def validate(self, attrs):
         if len(attrs['password']) < 8:
             raise serializers.ValidationError('Passsword must be at least 8 characters long')
-        if attrs['password'] != attrs['confirm_pass']:
-            raise serializers.ValidationError('Passwords mismatch')
         return attrs
     
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
         phone_number = profile_data.pop('phone')
-        validated_data.pop('confirm_pass')
         
         user = User.objects.create_user(
             username=validated_data['username'],
@@ -60,7 +58,9 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
         for num in phone_number:
             PhoneVolounteer.objects.create(volunteer=volunteer, **num)
         return user
-    
+ 
+# ---------------------------------------- DONOR REGISTRATION --------------------------------------------
+   
 from donor.models import PhoneDonor, Donor
 
 class DonorPhoneSerializer(serializers.ModelSerializer):
@@ -83,19 +83,16 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'password', 'confirm_pass', 'profile']
+        fields = ['username', 'password', 'profile']
     
     def validate(self, attrs):
         if len(attrs['password']) < 8:
             raise serializers.ValidationError('Passsword must be at least 8 characters long')
-        if attrs['password'] != attrs['confirm_pass']:
-            raise serializers.ValidationError('Passwords mismatch')
         return attrs
     
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
         phone_number = profile_data.pop('phone')
-        validated_data.pop('confirm_pass')
         
         user = User.objects.create_user(
             username=validated_data['username'],
