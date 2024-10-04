@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import VolunteerRegistrationSerializer
+from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
 
 @api_view(['POST'])
 def registerVolunteer(request):
@@ -14,3 +14,13 @@ def registerVolunteer(request):
         serializer.save()
         return Response({'message':'Registration succesfull'}, status=status.HTTP_200_OK)
     return Response({'message':'Registration unsuccesfull','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def registerDonor(request):
+    serializer = DonorRegistrationSerializer(data = request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'message':'Registrasion successfull'}, status=status.HTTP_200_OK)
+    return Response({'message':'Registration unsuccessful','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
