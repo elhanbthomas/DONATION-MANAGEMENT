@@ -27,7 +27,7 @@ export default function HomePage() {
                         </Select>
                     </FormControl>
                     <FormControl fullWidth sx={{ p: 2 }}>
-                        <Link to={`/login/${type}`} >
+                        <Link to={`/login`} >
                             <Button fullWidth variant="outlined">Log In</Button>
                         </Link>
                     </FormControl>
