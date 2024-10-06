@@ -8,16 +8,19 @@ export default function RegFormVolunteer({ handleSubmit }) {
         name: '',
         email: '',
         city: '',
-        house: '',
+        house_no: '',
         phone: [],
-        qual: '',
+        qualification: '',
         designation: '',
     })
 
     return (
         <Box
             component="form"
-            onSubmit={() => handleSubmit(data)}
+            onSubmit={(e) => {
+                e.preventDefault()
+                handleSubmit(data)
+            }}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
             <FormControl>
@@ -34,7 +37,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 />
             </FormControl>
             <FormControl>
-                <FormLabel htmlFor="name">Email</FormLabel>
+                <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
                     autoComplete="email"
                     name="email"
@@ -48,7 +51,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
             </FormControl>
             <Divider />
             <FormControl>
-                <FormLabel htmlFor="name">City</FormLabel>
+                <FormLabel htmlFor="city">City</FormLabel>
                 <TextField
                     name="city"
                     required
@@ -56,7 +59,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     id="city"
                     value={data.city}
                     onChange={(e) => setData({ ...data, city: e.target.value })}
-                    placeholder="Kottayam"
+                    placeholder="Pala"
                 />
             </FormControl>
             <FormControl>
@@ -66,9 +69,9 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     required
                     fullWidth
                     id="house"
-                    placeholder="9/11"
-                    value={data.house}
-                    onChange={(e) => setData({ ...data, house: e.target.value })}
+                    value={data.house_no}
+                    placeholder='9/11'
+                    onChange={(e) => setData({ ...data, house_no: e.target.value })}
                 />
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
@@ -76,8 +79,8 @@ export default function RegFormVolunteer({ handleSubmit }) {
             <FormControl fullWidth>
                 <FormLabel >Qualification</FormLabel>
                 <Select
-                    value={data.qual}
-                    onChange={(e) => setData({ ...data, qual: e.target.value })}
+                    value={data.qualification}
+                    onChange={(e) => setData({ ...data, qualification: e.target.value })}
                 >
                     <MenuItem value={"10"}>10th</MenuItem>
                     <MenuItem value={"12"}>12th</MenuItem>
@@ -96,7 +99,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-                <Button variant="outlined" type="submit" startIcon={<Save size="small"/>} >Submit</Button>
+                <Button variant="outlined" type="submit" startIcon={<Save size="small" />} >Submit</Button>
             </FormControl>
         </Box>
     )

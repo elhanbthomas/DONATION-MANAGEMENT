@@ -2,7 +2,7 @@ import { Login, Save } from '@mui/icons-material';
 import { InputLabel, FormControl, TextField, Stack, Card, Typography, Box, Button } from '@mui/material';
 import * as React from 'react';
 
-export default function UserPassForm({ pageType, userType, handleSubmit }) {
+export default function UserPassForm({ pageType, handleSubmit }) {
     const [data, setData] = React.useState({
         username: '',
         password: ''
