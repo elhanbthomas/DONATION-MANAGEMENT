@@ -22,3 +22,10 @@ A DBMS group project (SEM III)
   change directory to frontend  
   enter the command npm install  
 </pre>
+
+
+## API Documentation
+### Donor Registration
+![Donor api](https://github.com/user-attachments/assets/143af7d7-2ca2-4e0f-9da2-8f519799adf4)
+### Volunteer Registration
+![Volunteer api](https://github.com/user-attachments/assets/64f77fc9-1795-4a59-8f23-c2c5eec2461a)
