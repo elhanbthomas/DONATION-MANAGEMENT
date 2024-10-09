@@ -4,6 +4,7 @@ import RegistrationPage from './pages/RegistrationPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import UserPassForm from './components/UserPassForm.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import PickupTable from './components/Pickuptable.jsx';
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     {
         path: '/login',
         element: <LoginPage />
+    },
+    {
+        path: '/beta',
+        element: <PickupTable />
     }
 
 ]);
