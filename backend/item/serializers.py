@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import ItemPickup
+from .models import ItemPickup, DonorRequest, ItemType
+from django.core.exceptions import ObjectDoesNotExist
 
 class PickupSerializer(serializers.ModelSerializer):
     d_name = serializers.CharField(source = 'donor_request.donor.name')
@@ -9,6 +10,37 @@ class PickupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ItemPickup
-        # fields = ['id', 'donor', 'description', 'timestamp']
         fields = '__all__'
+
+from donor.models import Donor
+
+class DonorRequestSerializer(serializers.ModelSerializer):
+    type = serializers.CharField()
+    
+    class Meta:
+        model = DonorRequest
+        fields = ['type', 'description', 'quantity', 'image']
         
+    def create(self, validated_data):
+        
+        try:
+            item_type = ItemType.objects.get(name=validated_data['type'])
+            
+        except ItemPickup.DoesNotExist:
+            raise serializers.ValidationError({'type':'Item type does not exist'})
+        
+        user = self.context['request'].user
+        
+        try:
+            donor = Donor.objects.get(user=user)
+        except Donor.DoesNotExist:
+            raise serializers.ValidationError({'acccount':'Account not found'})
+        
+        donor_request = DonorRequest.objects.create(
+            item_type = item_type,
+            description = validated_data['description'],
+            quantity = validated_data['quantity'],
+            image = validated_data['image'],
+            donor = donor
+        )    
+        return donor_request    

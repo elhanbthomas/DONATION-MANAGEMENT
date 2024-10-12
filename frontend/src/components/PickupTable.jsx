@@ -7,8 +7,8 @@ import axios from "axios";
 export default function PickupTable(){
 
     const columns = [
-        { field: 'id', headerName: 'ID', flex: 1 },
-        {field: 'item_type', headerName: 'Item', flex: 1 },
+        { field: 'id', headerName: 'ID', width: 60 },
+        {field: 'item_type', headerName: 'Item', width:100 },
         {field: 'description', headerName: 'Description', flex: 1 },
         {field: 'd_name', headerName:'Donor Name', flex: 1},
         { field: 'quantity', headerName: 'Quantity', flex: 1 },
@@ -57,7 +57,7 @@ export default function PickupTable(){
     }, []);
 
     return (
-        <Paper elevation={3} sx={{width:'100%', height:600}}>
+        <Paper elevation={3} sx={{width:'100%', height:700}}>
             <DataGrid 
                 rows={rows}
                 columns={columns}

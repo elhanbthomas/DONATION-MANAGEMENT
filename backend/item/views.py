@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import ItemPickup
-from .serializers import PickupSerializer
+from .serializers import PickupSerializer, DonorRequestSerializer
 
 @api_view(['GET'])
 def pickupList(request):
@@ -19,3 +19,13 @@ def pickupList(request):
     
     except ObjectDoesNotExist:
         return Response({'error':'Error item not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def donor_request(request):
+    serializer = DonorRequestSerializer(data=request.data, context={'request':request})
+    
+    print(request.data)
+    
+    return Response({'test':'test OK'},status=status.HTTP_204_NO_CONTENT)
+    # if serializer.is_valid():
+    #     serializer.save()

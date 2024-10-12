@@ -17,9 +17,11 @@ from donor.models import Donor
 
 class DonorRequest(models.Model):
     item_type = models.ForeignKey(ItemType, on_delete=models.PROTECT)
+    description = models.TextField(null=True)
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     image = models.ImageField(upload_to='donation/', null=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
         return str(self.donor)
@@ -37,7 +39,6 @@ class ItemReceive(models.Model):
 
 class ItemPickup(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    description = models.TextField()
     volunteer = models.ForeignKey(Volounteer,on_delete=models.CASCADE)
     center = models.ForeignKey(Center, on_delete= models.CASCADE)
     donor_request = models.ForeignKey(DonorRequest, on_delete=models.PROTECT, blank=True, null=True)
