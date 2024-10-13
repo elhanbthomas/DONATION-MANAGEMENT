@@ -1,6 +1,8 @@
 venv/
 .env/
-myvenv
+
+myvenv/
+
 db.sqlite3
 
 # Python bytecode files
