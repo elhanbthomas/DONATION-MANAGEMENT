@@ -21,6 +21,8 @@ const UserForm = () => {
     email: '',
     latitude: '',
     longitude: '',
+    itemName: '',
+    itemQuantity: '',
   });
 
   const [geolocationAllowed, setGeolocationAllowed] = useState(false);
@@ -33,7 +35,13 @@ const UserForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === 'itemQuantity') {
+      // Ensure the itemQuantity is non-negative
+      const quantity = Math.max(0, parseInt(value) || 0);
+      setFormData((prevData) => ({ ...prevData, [name]: quantity.toString() }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -152,6 +160,28 @@ const UserForm = () => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Item Name"
+                name="itemName"
+                value={formData.itemName}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Item Quantity"
+                name="itemQuantity"
+                value={formData.itemQuantity}
+                onChange={handleChange}
+                type="number"
+                inputProps={{ min: "0" }}
                 fullWidth
                 required
               />
