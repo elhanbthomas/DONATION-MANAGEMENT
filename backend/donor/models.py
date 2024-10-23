@@ -19,6 +19,7 @@ class Donor(models.Model):
 class BeneficiaryRequest(models.Model):
     BenRequest_id = models.CharField(primary_key=True, max_length=5)
     name = models.CharField(max_length=100)
+    email = models.EmailField(null=True)
     address = models.TextField(max_length=200)
     Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
     items = models.TextField(max_length=200)
@@ -26,6 +27,7 @@ class BeneficiaryRequest(models.Model):
     quantity = models.IntegerField()
     timestamp = models.DateTimeField()
     phonenumber = models.BigIntegerField()
+    pincode = models.CharField(max_length=6, null=True)
 
 class PhoneDonor(models.Model):
     donor = models.ForeignKey(Donor, on_delete=models.PROTECT)
