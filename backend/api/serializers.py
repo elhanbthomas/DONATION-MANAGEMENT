@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from center.models import Volounteer, PhoneVolounteer
+from center.models import Volounteer, PhoneVolounteer, Center
         
 # -------------------------------------------- VOLUNTEER REGISTRATION --------------------------------------
         
@@ -115,3 +115,29 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             PhoneDonor.objects.create(donor=donor, **num)
         
         return user
+
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.core.exceptions import ObjectDoesNotExist
+
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Determine the user's profile type across different apps
+        try:
+            if hasattr(user, 'donor'):
+                token['user_type'] = 'donor'
+            elif hasattr(user, 'volunteer'):
+                token['user_type'] = 'volunteer'
+            elif hasattr(user, 'center'):
+                token['user_type'] = 'center'
+            else:
+                token['user_type'] = 'unknown'
+        except ObjectDoesNotExist:
+            token['user_type'] = 'unknown'
+
+        return token
