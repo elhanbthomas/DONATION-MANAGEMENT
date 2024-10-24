@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import ItemType, DonorRequest, ItemPickup
+
+admin.site.register(ItemType)
+admin.site.register(ItemPickup)
+admin.site.register(DonorRequest)
