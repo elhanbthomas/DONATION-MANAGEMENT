@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
+from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer, MyTokenObtainPairSerializer
 
 @api_view(['POST'])
 def registerVolunteer(request):
@@ -24,3 +24,9 @@ def registerDonor(request):
         serializer.save()
         return Response({'message':'Registrasion successfull'}, status=status.HTTP_200_OK)
     return Response({'message':'Registration unsuccessful','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
