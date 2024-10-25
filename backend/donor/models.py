@@ -16,30 +16,18 @@ class Donor(models.Model):
         return f"{self.d_id}: {self.name}"
 
 
-class Beneficiary(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    Benificiary_id = models.CharField(max_length=5,primary_key=True)
-    name = models.CharField(max_length=100)
-    address = models.TextField(max_length=200)
-    Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
-
-
-class BeneficiaryShipment(models.Model):
-    BeneficiaryShipment_id = models.CharField(primary_key=True, max_length=5)
-
-
 class BeneficiaryRequest(models.Model):
     BenRequest_id = models.CharField(primary_key=True, max_length=5)
+    name = models.CharField(max_length=100)
+    email = models.EmailField(null=True)
+    address = models.TextField(max_length=200)
+    Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
     items = models.TextField(max_length=200)
     description = models.TextField(max_length=200)
     quantity = models.IntegerField()
     timestamp = models.DateTimeField()
-    BeneficiaryShipment_id = models.ForeignKey(BeneficiaryShipment, on_delete=models.CASCADE)
-    Benificiary_id = models.ForeignKey(Beneficiary, on_delete=models.CASCADE)    
-
-class PhoneBeneficiary(models.Model):
-    Beneficiary_id = models.ForeignKey(Beneficiary, on_delete=models.CASCADE)
     phonenumber = models.BigIntegerField()
+    pincode = models.CharField(max_length=6, null=True)
 
 class PhoneDonor(models.Model):
     donor = models.ForeignKey(Donor, on_delete=models.PROTECT)
