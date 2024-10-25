@@ -141,3 +141,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['user_type'] = 'unknown'
 
         return token
+
+
+class DonorDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
+
+
+class VolunteerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Volounteer
+        fields = '__all__'

@@ -2,7 +2,9 @@ from django.shortcuts import render
 
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer, MyTokenObtainPairSerializer
 
@@ -29,3 +31,28 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+from donor.models import Donor
+from center.models import Volounteer
+
+from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
+
+@api_view(['GET'])
+@permission_classes(IsAuthenticated)
+def get_details(request):
+    donor = Donor.objects.get(user=request.user)
+    volunteer = Volounteer.objects.get(user=request.user)
+    
+    try:
+        if donor:
+            serializer = DonorDetailsSerializer(donor)
+            user_type = 'donor'
+        else:
+            serializer = VolunteerDetailSerializer(volunteer)
+            user_type = 'volunteer'
+            
+        return Response({'user_details':serializer.data, 'user_type':user_type}, status=status.HTTP_200_OK)
+    except Donor.DoesNotExist:
+        return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)
+        
