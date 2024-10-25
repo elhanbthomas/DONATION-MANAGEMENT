@@ -27,10 +27,7 @@ def registerDonor(request):
         return Response({'message':'Registrasion successfull'}, status=status.HTTP_200_OK)
     return Response({'message':'Registration unsuccessful','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
 
 
 from donor.models import Donor
@@ -56,3 +53,4 @@ def get_details(request):
     except Donor.DoesNotExist:
         return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)
         
+
