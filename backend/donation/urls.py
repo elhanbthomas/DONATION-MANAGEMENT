@@ -11,7 +11,8 @@ urlpatterns = [
 
     path('api/', include('donor.urls'),name = 'donor'),
     path('api/', include('center.urls'), name = 'center'),
-    path('api/', include('item.urls'), name = 'item')
+    path('api/', include('item.urls'), name = 'item'),
+    path('api/', include('beneficiary.urls'), name = 'beneficiary')
 ]
 
 if settings.DEBUG:  # This serves media files only in development

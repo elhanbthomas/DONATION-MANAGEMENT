@@ -47,10 +47,12 @@ class PhoneVolounteer(models.Model):
     def __str__(self):
         return self.number
 
-# class VolounteerPickup(models.Model):
-#     VolounteerPickupID = models.IntegerField(primary_key=True)
-#     timestamp = models.DateTimeField()
-    # VolounteerID = models.ManyToOneRel(Volounteer,null = False)
+
+class VolounteerPickup(models.Model):
+    assigned_time = models.DateTimeField(auto_now_add=True)
+    pickup_id = models.ForeignKey('item.ItemPickup', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    volunteer = models.ForeignKey(Volounteer, on_delete=models.CASCADE)
 
 
 

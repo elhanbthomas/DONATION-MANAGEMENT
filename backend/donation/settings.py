@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'api',
     'donor',
     'center',
-    'item'
+    'item',
+    'beneficiary'
 ]
 
 MIDDLEWARE = [

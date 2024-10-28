@@ -36,21 +36,23 @@ from center.models import Volounteer
 from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
 
 @api_view(['GET'])
-# @permission_classes(IsAuthenticated)
+@permission_classes(IsAuthenticated)
 def get_details(request):
-    donor = Donor.objects.get(user=request.user)
-    volunteer = Volounteer.objects.get(user=request.user)
+    donor = Donor.objects.filter(user=request.useer)
+    volunteer = Volounteer.objects.filter(user=request.useer)
     
-    try:
-        if donor:
-            serializer = DonorDetailsSerializer(donor)
-            user_type = 'donor'
-        else:
-            serializer = VolunteerDetailSerializer(volunteer)
-            user_type = 'volunteer'
-            
-        return Response({'user_details':serializer.data, 'user_type':user_type}, status=status.HTTP_200_OK)
-    except Donor.DoesNotExist:
+    if donor:
+        serializer = DonorDetailsSerializer(donor, many=True)
+        user_type = 'donor'
+    elif volunteer:
+        serializer = VolunteerDetailSerializer(volunteer, many=True)
+        user_type = 'volunteer'
+    
+    else:
         return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response({'user_details':serializer.data, 'user_type':user_type}, status=status.HTTP_200_OK)
+
+        
         
 
