@@ -53,6 +53,7 @@ class VolounteerPickup(models.Model):
     pickup_id = models.ForeignKey('item.ItemPickup', on_delete=models.CASCADE)
     volunteer = models.ForeignKey(Volounteer, on_delete=models.CASCADE, null=True)
     isPicked  = models.BooleanField(default=False)
+    isReceived = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.volunteer}: {self.pickup_id}"
