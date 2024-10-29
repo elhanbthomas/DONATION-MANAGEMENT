@@ -36,10 +36,10 @@ from center.models import Volounteer
 from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
 
 @api_view(['GET'])
-@permission_classes(IsAuthenticated)
+@permission_classes([IsAuthenticated])
 def get_details(request):
-    donor = Donor.objects.filter(user=request.user)
-    volunteer = Volounteer.objects.filter(user=request.user)
+    donor = Donor.objects.filter(user=request.user).first()
+    volunteer = Volounteer.objects.filter(user=request.user).first()
     
     if donor:
         serializer = DonorDetailsSerializer(donor, many=True)
