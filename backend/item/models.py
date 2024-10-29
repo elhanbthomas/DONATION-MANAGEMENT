@@ -22,7 +22,6 @@ class ItemPickup(models.Model):
     quantity = models.IntegerField(null=True)
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='item_pickup/', null=True)
-    volunteer = models.ForeignKey(Volounteer,on_delete=models.CASCADE)
     center = models.ForeignKey(Center, on_delete= models.CASCADE)
     donor = models.ForeignKey('donor.Donor', on_delete=models.CASCADE, null=True)
     isAccepted = models.BooleanField(default=False)
