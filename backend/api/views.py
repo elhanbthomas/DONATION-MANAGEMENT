@@ -42,10 +42,10 @@ def get_details(request):
     volunteer = Volounteer.objects.filter(user=request.user).first()
     
     if donor:
-        serializer = DonorDetailsSerializer(donor, many=True)
+        serializer = DonorDetailsSerializer(donor)
         user_type = 'donor'
     elif volunteer:
-        serializer = VolunteerDetailSerializer(volunteer, many=True)
+        serializer = VolunteerDetailSerializer(volunteer)
         user_type = 'volunteer'
     
     else:
