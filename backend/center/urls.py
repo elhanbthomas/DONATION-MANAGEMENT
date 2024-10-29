@@ -1,5 +1,5 @@
 from django.urls import path, include
 from . import views
 urlpatterns = [
-    path('', views.center_view, name = 'center-page')
+    path('donor/pickup/request', views.pickup_request, name='pickup_request')
 ]

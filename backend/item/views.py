@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import ItemPickupSerializer, ItemPickup
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def item_pickup(request):
     if request.method == 'POST':
         serializer = ItemPickupSerializer(data=request.data, context={'request':request})
@@ -20,7 +21,7 @@ def item_pickup(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def showPickups(request):
+def showDonorRequests(request):
     from center.models import Volounteer
     from donor.models import Donor
     if request.user.is_superuser:

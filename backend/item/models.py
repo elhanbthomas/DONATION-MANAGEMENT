@@ -26,6 +26,9 @@ class ItemPickup(models.Model):
     donor = models.ForeignKey('donor.Donor', on_delete=models.CASCADE, null=True)
     isAccepted = models.BooleanField(default=False)
     
+    def __str__(self):
+        return f"{self.item_type}: {self.donor}"
+    
     
 class ItemReceive(models.Model):
     Itemreceive_id = models.CharField(primary_key=True, max_length=5)
