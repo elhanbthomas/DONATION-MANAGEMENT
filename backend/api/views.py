@@ -38,8 +38,8 @@ from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
 @api_view(['GET'])
 @permission_classes(IsAuthenticated)
 def get_details(request):
-    donor = Donor.objects.filter(user=request.useer)
-    volunteer = Volounteer.objects.filter(user=request.useer)
+    donor = Donor.objects.filter(user=request.user)
+    volunteer = Volounteer.objects.filter(user=request.user)
     
     if donor:
         serializer = DonorDetailsSerializer(donor, many=True)
