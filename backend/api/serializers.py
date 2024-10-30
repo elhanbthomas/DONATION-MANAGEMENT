@@ -16,7 +16,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Volounteer
-        fields = ['name', 'email', 'city', 'house_no', 'phone', 'qualification', 'designation']
+        fields = ['name', 'email', 'city', 'phone', 'qualification', 'designation', 'address']
     
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
             name = profile_data['name'],
             email = profile_data['email'],
             city = profile_data['city'],
-            house_no = profile_data['house_no'],
+            address = profile_data['address'],
             qualification = profile_data['qualification'],
             designation = profile_data['designation']
         )
@@ -73,7 +73,7 @@ class DonorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Donor
-        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address']
+        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address', 'latitude', 'longitude']
 
 class DonorRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
@@ -108,7 +108,9 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             city = profile_data['city'],
             district = profile_data['district'],
             address = profile_data['address'],
-            pincode = profile_data['pincode']
+            pincode = profile_data['pincode'],
+            latitude = profile_data['latitude'],
+            longituse = profile_data['longitude']
         )
         
         for num in phone_number:

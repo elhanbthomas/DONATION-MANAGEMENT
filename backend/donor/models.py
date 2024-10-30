@@ -11,7 +11,8 @@ class Donor(models.Model):
     city = models.CharField(max_length=100)
     pincode = models.CharField(max_length=6, blank=True, null=True)
     address = models.TextField(null=True)
-    
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
     def __str__(self):
         return f"{self.d_id}: {self.name}"
 

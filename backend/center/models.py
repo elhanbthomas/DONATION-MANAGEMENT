@@ -16,7 +16,7 @@ class Volounteer(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     v_id = models.CharField(primary_key=True, max_length=5)
     name = models.CharField(max_length=100)
-    # address = models.CharField(max_length=100)
+    address = models.TextField(null=True)
     city = models.CharField(max_length=100, null=True)
     house_no = models.CharField(max_length=100, null=True)
     email = models.EmailField()
