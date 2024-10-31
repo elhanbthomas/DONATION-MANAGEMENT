@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from item.models import ItemPickup, ItemReceive
-from .models import VolounteerPickup, Volounteer, Inventory
+from .models import VolounteerPickup, Volounteer, Inventory, Center
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -51,7 +51,7 @@ def assign_volunteer(request):
 
 
 
-from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer
+from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pickupDetails(request):
@@ -127,7 +127,6 @@ def change_pickup_status(request):
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def showDonorRequests(request):
-    from center.models import Volounteer
     
     try:
         user = Volounteer.objects.get(user=request.user)
@@ -140,3 +139,17 @@ def showDonorRequests(request):
     except Volounteer.DoesNotExist:
         print('volunteer not found')
         return Response({'error': 'Unable to get request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def volunteer_list(request):
+    try:
+        user = Volounteer.objects.get(user=request.user)
+        print(user.Center_id)
+        center = Center.objects.get(pk=user.Center_id.pk)
+        volunteers = Volounteer.objects.filter(Center_id=center, user__is_superuser = False)
+        serializer = VolunteerListSerializer(volunteers, many=True)
+        return Response(serializer.data, status=200)
+    except Volounteer.DoesNotExist:
+        return Response({'error': 'list not found'},status=404)

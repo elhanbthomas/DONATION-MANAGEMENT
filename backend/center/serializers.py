@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import VolounteerPickup, Volounteer
+from .models import VolounteerPickup, Volounteer, PhoneVolounteer
 from item.models import ItemPickup, ItemType
 from donor.models import Donor, PhoneDonor
 
@@ -35,4 +35,17 @@ class GetVolunteerPickupSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolounteerPickup
         fields = ['id', 'pickup_id', 'assigned_time', 'isPicked', 'isReceived']
-        
+
+
+#----------------------------------------------------------------------------------------------------------
+class VolunteerPhoneSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = PhoneVolounteer
+        fields = ['number']
+
+class VolunteerListSerializer(serializers.ModelSerializer):
+    phone = VolunteerPhoneSerializer(many=True, source='phonevolounteer_set')
+    class Meta:
+        model = Volounteer
+        exclude = ['Center_id', 'user']
