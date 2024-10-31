@@ -24,6 +24,8 @@ class ItemPickup(models.Model):
     image = models.ImageField(upload_to='item_pickup/', null=True)
     center = models.ForeignKey(Center, on_delete= models.CASCADE)
     donor = models.ForeignKey('donor.Donor', on_delete=models.CASCADE, null=True)
+    forPickup = models.BooleanField(default=False)
+    isPicked = models.BooleanField(default=False)
     isAccepted = models.BooleanField(default=False)
     
     def __str__(self):
