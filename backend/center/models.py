@@ -1,6 +1,7 @@
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.validators import MinValueValidator
 
 class Center(models.Model):
     CenterID = models.CharField(max_length=4,primary_key=True)
@@ -18,7 +19,6 @@ class Volounteer(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField(null=True)
     city = models.CharField(max_length=100, null=True)
-    house_no = models.CharField(max_length=100, null=True)
     email = models.EmailField()
     qualification = models.CharField(max_length=255, null=True)
     designation = models.CharField(max_length=255, null=True)
@@ -78,3 +78,9 @@ class VolounteerPickup(models.Model):
 
 
 
+class Inventory(models.Model):
+    inventory_id = models.CharField(max_length=5)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE)
+    item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
+    quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    last_updated = models.DateTimeField(auto_now=True)

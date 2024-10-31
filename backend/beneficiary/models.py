@@ -7,7 +7,7 @@ class Beneficiary(models.Model):
     phone = models.CharField(max_length=12)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-    address = models.TextField()
+    address = models.TextField(null=True)
     pincode = models.CharField(max_length=6)
     createdAt = models.DateField(auto_now_add=True)
     

@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from item.models import ItemPickup
-from .models import VolounteerPickup, Volounteer
+from item.models import ItemPickup, ItemReceive
+from .models import VolounteerPickup, Volounteer, Inventory
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -68,4 +68,52 @@ def pickupDetails(request):
         return Response({'error': 'Volunteer not found'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_pickup_status(request):
+    
+    isPicked = request.data.get('isPicked')
+    isReceived = request.data.get('isReceived')
+    user = request.user
+    print(user)
+    try:
+        volunteer = Volounteer.objects.get(user=user)
+        print(volunteer)
+        try:
+            pickup = VolounteerPickup.objects.get(volunteer=volunteer)
+            if isPicked:
+                pickup.isPicked = isPicked
+                pickup.save()
+            if isReceived:
+                pickup.isReceived = isReceived
+                pickup.save()
+                item_pickup = pickup.pickup_id
+                item_receive = ItemReceive.objects.create(
+                    Volounteer_id = volunteer,
+                    center = volunteer.Center_id,
+                    pickup = item_pickup
+                )
+                
+                if item_receive:
+                    inventory, created = Inventory.objects.get_or_create(
+                        center = volunteer.Center_id,
+                        item_type = item_pickup.item_type,
+                        defaults= {'quantity':item_pickup.quantity}
+                    )
+                    
+                    if not created:
+                        quantity = inventory.quantity
+                        inventory.quantity = quantity + item_pickup.quantity
+                        inventory.save()
+                        return Response({'message': 'Inventory updated'},status=200)
+                    
+                    return Response({'message': 'Inventory created'})
+                
+            return Response({'message': 'status updated'})
         
+        except VolounteerPickup.DoesNotExist:
+            return Response({'error':'pickup nor found'},status=status.HTTP_404_NOT_FOUND) 
+    except Volounteer.DoesNotExist:
+        return Response({'error':'volunteer not found'},status=status.HTTP_404_NOT_FOUND)

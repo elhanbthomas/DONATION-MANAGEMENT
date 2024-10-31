@@ -110,7 +110,7 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             address = profile_data['address'],
             pincode = profile_data['pincode'],
             latitude = profile_data['latitude'],
-            longituse = profile_data['longitude']
+            longitude = profile_data['longitude']
         )
         
         for num in phone_number:

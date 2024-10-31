@@ -31,13 +31,10 @@ class ItemPickup(models.Model):
     
     
 class ItemReceive(models.Model):
-    Itemreceive_id = models.CharField(primary_key=True, max_length=5)
-    quantity = models.IntegerField()
-    timestamp = models.DateTimeField()
-    description = models.TextField()
-    isReceived = models.BooleanField(default=False)
-    Volounteer_id = models.ForeignKey(Volounteer,on_delete=models.CASCADE)
-    image = models.ImageField(blank=True, null=True)
+    received_at = models.DateTimeField(auto_now_add=True, null=True)
+    Volounteer_id = models.ForeignKey(Volounteer,on_delete=models.CASCADE, null=True)
+    pickup = models.ForeignKey(ItemPickup, on_delete=models.PROTECT, null=True)
+    center = models.ForeignKey(Center, on_delete=models.PROTECT, null=True)
     
     
 # class Items(models.Model):
