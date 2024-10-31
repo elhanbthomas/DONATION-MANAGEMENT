@@ -53,7 +53,7 @@ def assign_volunteer(request):
 
 
 
-from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer, InventoryListSerializer
+from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer, InventoryListSerializer, CenterListSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pickupDetails(request):
@@ -215,3 +215,9 @@ def inventory_list(request):
     except Inventory.DoesNotExist:
         return Response({'error': 'inventory not found'}, status=404)
     
+@api_view(['GET'])
+def center_list(request):
+    
+    centers = Center.objects.all()
+    serializer = CenterListSerializer(centers, many=True)
+    return Response(serializer.data, status=200)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import VolounteerPickup, Volounteer, PhoneVolounteer, Inventory
+from .models import VolounteerPickup, Volounteer, PhoneVolounteer, Inventory, Center
 from item.models import ItemPickup, ItemType
 from donor.models import Donor, PhoneDonor
 
@@ -58,3 +58,10 @@ class InventoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         exclude = ['center']
+
+
+class CenterListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Center
+        fields = '__all__'
