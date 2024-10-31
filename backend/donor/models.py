@@ -13,6 +13,7 @@ class Donor(models.Model):
     address = models.TextField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
+    center = models.ForeignKey(Center, on_delete=models.PROTECT)
     def __str__(self):
         return f"{self.d_id}: {self.name}"
 

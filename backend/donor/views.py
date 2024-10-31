@@ -1,33 +1,25 @@
-from django.http import HttpResponse
-# from .models import   BeneficiaryRequest
-# from .serializer import BeneficiaryRequestSerializer
-from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics,status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
-def donor_view(*args,**kwargs):
-    return HttpResponse("<h1>Donor Page View<h1>")
+from .models import Donor
+from .serializer import DonorRequestSerializer
+from item.models import ItemPickup
 
-# class BeneficiaryRequestCreate(generics.ListCreateAPIView):
-#     queryset =  BeneficiaryRequest.objects.all()
-#     serializer_class =  BeneficiaryRequestSerializer
-
-# class BeneficiaryRequestUpdate(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = BeneficiaryRequest.objects.all()
-#     serializer_class = BeneficiaryRequestSerializer
-#     lookup_field  = "pk"
-
-# class BeneficiaryRequestList(APIView):
-#     def get(self, request,format = None):
-#         name= request.query_params.get("name", "")
-
-#         if name:
-#             requests = BeneficiaryRequest.objects.filter(name__icontains = name) #icontains = case insensitive
-#         else:
-#             requests = BeneficiaryRequest.objects.all()
-#         serializer = BeneficiaryRequestSerializer(requests, many =True)
-#         return Response(serializer.data, status = status.HTTP_200_OK)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def donor_request_details(request):
+    
+    user = request.user
+    try:
+        donor = Donor.objects.get(user=user)
+        items = ItemPickup.objects.filter(donor=donor)
+        serializer = DonorRequestSerializer(items, many=True)
+        return Response(serializer.data, status=200)
+    except Donor.DoesNotExist:
+        return Response({'error', serializer.errors},status=400)
+    
 
 
 

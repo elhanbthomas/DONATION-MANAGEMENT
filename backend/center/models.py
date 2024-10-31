@@ -56,7 +56,7 @@ class VolounteerPickup(models.Model):
     isReceived = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.volunteer}: {self.pickup_id}"
+        return f"{self.volunteer}: {self.pickup_id} ({str(self.pk)})"
 # class CenterReceive(models.Model):
 #     CenterReceiveID = models.IntegerField(primary_key=True)
     # ShippingID = models.ManyToOneRel(CenterShipping, null = False)
@@ -84,3 +84,6 @@ class Inventory(models.Model):
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     last_updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.inventory_id

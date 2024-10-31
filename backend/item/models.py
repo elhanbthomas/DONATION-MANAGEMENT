@@ -27,7 +27,7 @@ class ItemPickup(models.Model):
     isAccepted = models.BooleanField(default=False)
     
     def __str__(self):
-        return f"{self.item_type}: {self.donor}"
+        return f"{self.item_type}: {self.donor} ({str(self.pk)})"
     
     
 class ItemReceive(models.Model):
@@ -36,6 +36,8 @@ class ItemReceive(models.Model):
     pickup = models.ForeignKey(ItemPickup, on_delete=models.PROTECT, null=True)
     center = models.ForeignKey(Center, on_delete=models.PROTECT, null=True)
     
+    def __str__(self):
+        return str(self.pk) + ': ' + str(self.center)
     
 # class Items(models.Model):
 #     Item_id = models.CharField(primary_key=True, max_length=5)

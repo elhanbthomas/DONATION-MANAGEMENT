@@ -73,7 +73,7 @@ def pickupDetails(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_pickup_status(request):
-    
+    pk = request.data.get('id')
     isPicked = request.data.get('isPicked')
     isReceived = request.data.get('isReceived')
     user = request.user
@@ -82,7 +82,7 @@ def change_pickup_status(request):
         volunteer = Volounteer.objects.get(user=user)
         print(volunteer)
         try:
-            pickup = VolounteerPickup.objects.get(volunteer=volunteer)
+            pickup = VolounteerPickup.objects.get(volunteer=volunteer,pk=pk)
             if isPicked:
                 pickup.isPicked = isPicked
                 pickup.save()
