@@ -46,7 +46,10 @@ def get_details(request):
         user_type = 'donor'
     elif volunteer:
         serializer = VolunteerDetailSerializer(volunteer)
-        user_type = 'volunteer'
+        if request.user.is_superuser:
+            user_type = 'super'
+        else:
+            user_type = 'volunteer'
     
     else:
         return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)

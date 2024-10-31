@@ -123,11 +123,11 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
 class DonorDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donor
-        fields = '__all__'
+        exclude = ['user']
 
 
 class VolunteerDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Volounteer
-        fields = '__all__'
+        exclude = ['user']
 
