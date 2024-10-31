@@ -7,5 +7,6 @@ urlpatterns = [
     path('pickup/update', views.change_pickup_status, name='status_change'),
     path('donor/request/details', views.showDonorRequests, name='request_details'),
     path('center/volunteers', views.volunteer_list, name='volunteer_list'),
-    path('center/donor/receive', views.direct_receive, name='direct_receive')
+    path('center/donor/receive', views.direct_receive, name='direct_receive'),
+    path('center/inventory', views.inventory_list, name='inventory_list'),
 ]

@@ -53,7 +53,7 @@ def assign_volunteer(request):
 
 
 
-from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer
+from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer, InventoryListSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pickupDetails(request):
@@ -197,3 +197,18 @@ def direct_receive(request):        # donation acepted directly from center
     
     except ItemPickup.DoesNotExist:
         return Response({'error':'record not found'},status=404)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def inventory_list(request):
+    
+    volunteer = Volounteer.objects.get(user=request.user)
+    center = volunteer.Center_id
+    
+    try:
+        inventory = Inventory.objects.filter(center=center)
+        serializer = InventoryListSerializer(inventory, many=True)
+        return Response(serializer.data, status=200)
+    except Inventory.DoesNotExist:
+        return Response({'error': 'inventory not found'}, status=404)

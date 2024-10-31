@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import VolounteerPickup, Volounteer, PhoneVolounteer
+from .models import VolounteerPickup, Volounteer, PhoneVolounteer, Inventory
 from item.models import ItemPickup, ItemType
 from donor.models import Donor, PhoneDonor
 
@@ -21,7 +21,7 @@ class ItemTypeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ItemType
-        fields = ['name', 'description']
+        exclude = ['timestamp']
 
 class ItemPickupSerializer(serializers.ModelSerializer):
     donor = DonorSerializer()
@@ -49,3 +49,12 @@ class VolunteerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Volounteer
         exclude = ['Center_id', 'user']
+
+
+
+class InventoryListSerializer(serializers.ModelSerializer):
+    item_type = ItemTypeSerializer()
+    
+    class Meta:
+        model = Inventory
+        exclude = ['center']

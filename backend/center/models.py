@@ -27,12 +27,6 @@ class Volounteer(models.Model):
     def __str__(self):
         return self.v_id + ": " + self.name
 
-    
-# class PhoneCenter(models.Model):
-#     Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
-#     phonenumber = models.BigIntegerField()
-
-    
 
 # class CenterShipping(models.Model):
 #     ShippingID = models.SmallIntegerField(primary_key=True)

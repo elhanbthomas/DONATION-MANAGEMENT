@@ -7,7 +7,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 # from .models import ItemPickup
-from .serializers import ItemPickupSerializer, ItemPickup
+from .serializers import ItemPickupSerializer, ItemPickup, ItemType
+from center.serializers import ItemTypeSerializer
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -20,3 +22,9 @@ def item_pickup(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def item_type_list(request):
+    item_type = ItemType.objects.all()
+    serializer = ItemTypeSerializer(item_type, many=True)
+    return Response(serializer.data,status=200)
