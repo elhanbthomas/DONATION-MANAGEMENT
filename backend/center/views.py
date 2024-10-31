@@ -97,10 +97,12 @@ def change_pickup_status(request):
                 )
                 
                 if item_receive:
+                    count = Inventory.objects.count()
+                    i_id = str(volunteer.Center_id) + ': ' + str(count+1)
                     inventory, created = Inventory.objects.get_or_create(
                         center = volunteer.Center_id,
                         item_type = item_pickup.item_type,
-                        defaults= {'quantity':item_pickup.quantity}
+                        defaults= {'inventory_id':i_id,'quantity':item_pickup.quantity}
                     )
                     
                     if not created:

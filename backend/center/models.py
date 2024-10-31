@@ -79,7 +79,7 @@ class VolounteerPickup(models.Model):
 
 
 class Inventory(models.Model):
-    inventory_id = models.CharField(max_length=5)
+    inventory_id = models.CharField(max_length=50)
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
