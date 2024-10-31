@@ -51,7 +51,7 @@ def assign_volunteer(request):
 
 
 
-from .serializers import GetVolunteerPickupSerializer
+from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pickupDetails(request):
@@ -90,6 +90,8 @@ def change_pickup_status(request):
                 pickup.isReceived = isReceived
                 pickup.save()
                 item_pickup = pickup.pickup_id
+                item_pickup.isAccepted = True
+                item_pickup.save()
                 item_receive = ItemReceive.objects.create(
                     Volounteer_id = volunteer,
                     center = volunteer.Center_id,
@@ -119,3 +121,22 @@ def change_pickup_status(request):
             return Response({'error':'pickup nor found'},status=status.HTTP_404_NOT_FOUND) 
     except Volounteer.DoesNotExist:
         return Response({'error':'volunteer not found'},status=status.HTTP_404_NOT_FOUND)
+    
+    
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def showDonorRequests(request):
+    from center.models import Volounteer
+    
+    try:
+        user = Volounteer.objects.get(user=request.user)
+        print(user)
+        center = user.Center_id
+        items = ItemPickup.objects.filter(center=center, isAccepted=False)
+        serializer = ItemPickupSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Volounteer.DoesNotExist:
+        print('volunteer not found')
+        return Response({'error': 'Unable to get request'}, status=status.HTTP_404_NOT_FOUND)

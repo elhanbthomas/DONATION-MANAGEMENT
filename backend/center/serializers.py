@@ -28,7 +28,7 @@ class ItemPickupSerializer(serializers.ModelSerializer):
     item_type = ItemTypeSerializer()
     class Meta:
         model = ItemPickup
-        fields = ['item_type', 'quantity', 'description', 'image', 'requested_at', 'donor']
+        exclude = ['center']
 
 class GetVolunteerPickupSerializer(serializers.ModelSerializer):
     pickup_id = ItemPickupSerializer()
