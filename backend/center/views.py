@@ -145,19 +145,6 @@ def showDonorRequests(request):
         return Response({'error': 'Unable to get request'}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def volunteer_list(request):
-    try:
-        user = Volounteer.objects.get(user=request.user)
-        print(user.Center_id)
-        center = Center.objects.get(pk=user.Center_id.pk)
-        volunteers = Volounteer.objects.filter(Center_id=center, user__is_superuser = False)
-        serializer = VolunteerListSerializer(volunteers, many=True)
-        return Response(serializer.data, status=200)
-    except Volounteer.DoesNotExist:
-        return Response({'error': 'list not found'},status=404)
-
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -198,6 +185,21 @@ def direct_receive(request):        # donation acepted directly from center
     except ItemPickup.DoesNotExist:
         return Response({'error':'record not found'},status=404)
 
+# ------------------------------LISTS---------------------------------------------------------
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def volunteer_list(request):
+    try:
+        user = Volounteer.objects.get(user=request.user)
+        print(user.Center_id)
+        center = Center.objects.get(pk=user.Center_id.pk)
+        volunteers = Volounteer.objects.filter(Center_id=center, user__is_superuser = False)
+        serializer = VolunteerListSerializer(volunteers, many=True)
+        return Response(serializer.data, status=200)
+    except Volounteer.DoesNotExist:
+        return Response({'error': 'list not found'},status=404)
+    
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
@@ -212,3 +214,4 @@ def inventory_list(request):
         return Response(serializer.data, status=200)
     except Inventory.DoesNotExist:
         return Response({'error': 'inventory not found'}, status=404)
+    
