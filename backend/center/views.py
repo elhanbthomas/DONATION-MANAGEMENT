@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -73,7 +72,7 @@ def pickupDetails(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_pickup_status(request):
-    
+  
     isPicked = request.data.get('isPicked')
     isReceived = request.data.get('isReceived')
     user = request.user
@@ -119,3 +118,61 @@ def change_pickup_status(request):
             return Response({'error':'pickup nor found'},status=status.HTTP_404_NOT_FOUND) 
     except Volounteer.DoesNotExist:
         return Response({'error':'volunteer not found'},status=status.HTTP_404_NOT_FOUND)
+    
+#-------------------------CENTER VIEWS ------------------------------------------------------------------
+from .models import Center, CenterRequest
+from .serializers import CenterRegistrationSerializer, CenterRequestSerializer,CenterRequestCreateSerializer
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def create_request(request):
+    if not request.user.is_superuser:
+        return Response({ "You do not have permission to perform this action"}, status)
+    serializer = CenterRequestCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_center_requests(request):
+    if not request.user.is_superuser:
+        return Response({"detail": "You do not have permission to view this list."},
+                        status=status.HTTP_403_FORBIDDEN)
+    
+    center_requests = CenterRequest.objects.all()
+    serializer = CenterRequestSerializer(center_requests, many=True)
+    return Response(serializer.data)
+ 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def accept_center_request(request, request_id):
+    try:
+        center_request = CenterRequest.objects.get(id=request_id)
+    except CenterRequest.DoesNotExist:
+        return Response({"detail": "Request not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if center_request.status != 'Pending':
+        return Response({"detail": "This request has already been processed."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.user.is_superuser:
+        return Response({"detail": "Main center cannot accept its own requests."}, status=status.HTTP_403_FORBIDDEN)
+
+    center_request.status = 'Accepted'
+    center_request.save()
+
+    responding_center = center_request.Center_id
+    main_center = Center.objects.get(isMain=True)
+
+    if responding_center.inventory >= center_request.quantity:
+        responding_center.inventory -= center_request.quantity
+        main_center.inventory += center_request.quantity
+        responding_center.save()
+        main_center.save()
+    else:
+        return Response({"detail": "Insufficient inventory at responding center."}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"detail": "Request accepted and inventory updated."}, status=status.HTTP_200_OK)

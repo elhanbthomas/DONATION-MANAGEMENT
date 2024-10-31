@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import VolounteerPickup, Volounteer
 from item.models import ItemPickup, ItemType
 from donor.models import Donor, PhoneDonor
+from center.models import Center, CenterRequest
 
 class DonorPhoneSerializer(serializers.ModelSerializer):
     
@@ -35,4 +36,22 @@ class GetVolunteerPickupSerializer(serializers.ModelSerializer):
     class Meta:
         model = VolounteerPickup
         fields = ['id', 'pickup_id', 'assigned_time', 'isPicked', 'isReceived']
-        
+
+
+class CenterRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Center
+        fields = [ 'name', 'email', 'isMain', 'City', 'State']
+
+class CenterRequestSerializer(serializers.ModelSerializer):
+    Center_id = CenterRegistrationSerializer()
+    class Meta:
+        model = CenterRequest
+        fields = ['description', 'quantity', 'Center_id']
+
+class CenterRequestCreateSerializer(serializers.ModelSerializer):
+    Center_id = serializers.PrimaryKeyRelatedField(queryset=Center.objects.all())  # Use ID instead of full Center
+
+    class Meta:
+        model = CenterRequest
+        fields = ['description', 'quantity', 'Center_id']
