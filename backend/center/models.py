@@ -12,7 +12,7 @@ class Center(models.Model):
     State = models.CharField(max_length=200)
     def __str__(self):
         return self.name
-
+    
 class Volounteer(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     v_id = models.CharField(primary_key=True, max_length=5)
@@ -44,7 +44,7 @@ class VolounteerPickup(models.Model):
 
     def __str__(self):
         return f"{self.volunteer}: {self.pickup_id}"
-    
+
 
 class Inventory(models.Model):
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
@@ -56,23 +56,28 @@ class CenterRequest(models.Model):
     description = models.TextField(max_length=200)
     quantity = models.IntegerField()
     status = models.CharField(max_length=20, default='Pending')
-    Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
+    fromCenter = models.ForeignKey(Center, on_delete=models.CASCADE)
+    to_center = models.ForeignKey(Center, on_delete=models.CASCADE)
+    def accept(self):
+        self.status = "Accepted"
+        self.save()
+        CenterShipping.objects.create(
+            from_center=self.to_center,
+            to_center=self.from_center,
+            in_transit=True,
+        )
 
-# class PhoneCenter(models.Model):
-#     Center_id = models.ForeignKey(Center, on_delete=models.CASCADE)
-#     phonenumber = models.BigIntegerField()
+class CenterShipping(models.Model):
+    fromCenter = models.ForeignKey(Center, on_delete= models.CASCADE)
+    toCenter  = models.ForeignKey(Centeron_delete= models.CASCADE)
+    fromAdress = models.CharField(max_length=255,null=True)
+    toAdress = models.CharField(max_length=255,null=True)
+    inTransit = models.BooleanField(default=False)
 
-    
-
-# class CenterShipping(models.Model):
-#     ShippingID = models.SmallIntegerField(primary_key=True)
-#     fromAdress = models.CharField(max_length=255)
-#     toAdress = models.CharField(max_length=255)
-
-# class CenterReceive(models.Model):
-#     CenterReceiveID = models.IntegerField(primary_key=True)
-    # ShippingID = models.ManyToOneRel(CenterShipping, null = False)
-    # timestamp = models.DateTimeField(null = False)
+class CenterReceive(models.Model):
+    ShippingID = models.ForeignKey(CenterShipping, null = False)
+    timestamp = models.DateTimeField(null = False)
+    Received = models.BooleanField(default=False)
 
 
 
