@@ -241,12 +241,26 @@ from django.db.models import Q
 @api_view(['GET'])
 @permission_classes([IsStaffUser])
 def list_other_center_requests(request):
-    user = request.user
+    user = request.user 
     try: 
         volunteer = Volounteer.objects.get(user=user)
         center = volunteer.Center_id 
         print(center)
         requests = CenterRequest.objects.exclude(Q(center=center) | Q(isShipped=True))
+        serializer = ListCenterRequestSerializer(requests, many=True) 
+        return Response(serializer.data, status=200)
+    except Volounteer.DoesNotExist:
+        return Response({'error':'list not found'},status=404)
+
+@api_view(['GET'])
+@permission_classes([IsStaffUser])
+def list_mycenter_request(request):
+    user = request.user 
+    try: 
+        volunteer = Volounteer.objects.get(user=user)
+        center = volunteer.Center_id 
+        print(center)
+        requests = CenterRequest.objects.filter(center=center)
         serializer = ListCenterRequestSerializer(requests, many=True) 
         return Response(serializer.data, status=200)
     except Volounteer.DoesNotExist:
@@ -295,39 +309,54 @@ def accept_request(request):
     except CenterRequest.DoesNotExist:
         return Response({'error':'request not found'},status=404)
 
-# @api_view(['PATCH'])
-# @permission_classes([IsAuthenticated])
-# def update_shipment_status(request, shipment_id):
-#     try:
-#         shipment = CenterShipping.objects.get(pk=shipment_id)
-#     except CenterShipping.DoesNotExist:
-#         return Response({"error": "Shipment not found"}, status=status.HTTP_404_NOT_FOUND)
-
-#     serializer = CenterShippingSerializer(shipment, data={"in_transit": True}, partial=True)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response({"status": "Shipment status updated to in transit"}, status=status.HTTP_200_OK)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def mark_received(request, shipment_id):
+@permission_classes([IsStaffUser])
+def mark_received(request):
+    req_id = request.data.get('req_id') 
     try:
-        shipment = CenterShipping.objects.get(pk=shipment_id, in_transit=True)
-    except CenterShipping.DoesNotExist:
-        return Response({"error": "Shipment not in transit or does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        c_request = CenterRequest.objects.get(pk=req_id)
+        volunteer = Volounteer.objects.get(user=request.user)
+        try:
+            shipment = CenterShipping.objects.get(c_request=c_request)
+            receive_data = {
+                "ShippingID": shipment.pk,
+                "req_id": c_request,
+                "quantity": c_request.quantity,
+                "item_type": c_request.item_type.pk,
+                "center": volunteer.Center_id.pk
+            }
+    
+            receive_serializer = CenterReceiveSerializer(data=receive_data)
+            if receive_serializer.is_valid():
+                receive_serializer.save()
 
-    receive_data = {
-        "shipping": shipment.id,
-        "timestamp": request.data.get("timestamp"),
-        "received": True
-    }
-    receive_serializer = CenterReceiveSerializer(data=receive_data)
-    if receive_serializer.is_valid():
-        receive_serializer.save()
-        shipment.in_transit = False 
-        shipment.save()
-        return Response({"status": "Shipment marked as received"}, status=status.HTTP_200_OK)
+                c_request.isReceived = True
+                c_request.save()
+                shipment.isComplete = True
+                shipment.save()
+                
+                try:
+                    inventory, created = Inventory.objects.get_or_create(
+                        center=volunteer.Center_id, 
+                        item_type=c_request.item_type
+                        )
+                    if not created:
+                        inventory.quantity += c_request.quantity
+                        inventory.save()
+                        return Response({'message':'Inventory updated'})
+                    
+                    return Response({'message':'Inventory created'})
+                
+                except Inventory.DoesNotExist:
+                    return Response({"error": "Inventory not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+        except CenterShipping.DoesNotExist:
+            return Response({"error": "Shipment does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+    except CenterRequest.DoesNotExist:
+        return Response({"error": "Request does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+    
     return Response(receive_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

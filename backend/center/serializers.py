@@ -135,7 +135,10 @@ class CenterReceiveSerializer(serializers.ModelSerializer):
     ShippingID = CenterShipping
     class Meta:
         model = CenterReceive
-        fields = ['ShippingID', 'timestamp', 'Received']
+        fields = ['ShippingID', 'quantity', 'item_type', 'center', 'req_id']
+    
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 
 
