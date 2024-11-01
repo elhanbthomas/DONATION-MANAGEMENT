@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-
-from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
+from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer, CenterRegistrationSerializer
 
 @api_view(['POST'])
 def registerVolunteer(request):
@@ -28,12 +27,9 @@ def registerDonor(request):
     return Response({'message':'Registration unsuccessful','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 from donor.models import Donor
 from center.models import Volounteer
-
-from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
+from .serializers import DonorPhoneSerializer, VolunteerPhoneSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -42,20 +38,18 @@ def get_details(request):
     volunteer = Volounteer.objects.filter(user=request.user).first()
     
     if donor:
-        serializer = DonorDetailsSerializer(donor)
+        serializer = DonorPhoneSerializer(donor)
         user_type = 'donor'
     elif volunteer:
+
         serializer = VolunteerDetailSerializer(volunteer)
         if request.user.is_superuser:
             user_type = 'super'
         else:
             user_type = 'volunteer'
-    
+
     else:
         return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)
     
     return Response({'user_details':serializer.data, 'user_type':user_type}, status=status.HTTP_200_OK)
-
-        
-        
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from center.models import Volounteer, PhoneVolounteer, Center
+from center.models import Volounteer, PhoneVolounteer,Center
         
 # -------------------------------------------- VOLUNTEER REGISTRATION --------------------------------------
         
@@ -16,7 +16,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Volounteer
-        fields = ['name', 'email', 'city', 'phone', 'qualification', 'designation', 'address']
+        fields = ['name', 'email', 'city', 'house_no', 'phone', 'qualification', 'designation']
     
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
             name = profile_data['name'],
             email = profile_data['email'],
             city = profile_data['city'],
-            address = profile_data['address'],
+            house_no = profile_data['house_no'],
             qualification = profile_data['qualification'],
             designation = profile_data['designation']
         )
@@ -112,12 +112,12 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             center = profile_data['center'],
             latitude = profile_data['latitude'],
             longitude = profile_data['longitude']
-        )
         
         for num in phone_number:
             PhoneDonor.objects.create(donor=donor, **num)
         
         return user
+
 
 
 class DonorDetailsSerializer(serializers.ModelSerializer):
@@ -130,4 +130,3 @@ class VolunteerDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Volounteer
         exclude = ['user']
-

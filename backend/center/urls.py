@@ -10,4 +10,5 @@ urlpatterns = [
     path('center/donor/receive', views.direct_receive, name='direct_receive'),
     path('center/inventory', views.inventory_list, name='inventory_list'),
     path('center/list', views.center_list, name='center_list')
+
 ]

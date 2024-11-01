@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -221,3 +220,91 @@ def center_list(request):
     centers = Center.objects.all()
     serializer = CenterListSerializer(centers, many=True)
     return Response(serializer.data, status=200)
+#-------------------------CENTER VIEWS ------------------------------------------------------------------
+from .models import CenterRequest,CenterShipping
+from .serializers import CenterRegistrationSerializer, CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
+from django.shortcuts import get_object_or_404
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def create_request(request):
+    serializer = CenterRequestCreateSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"status": "Request Created"}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_center_requests(request):
+    user_center = request.user.center 
+    requests = CenterRequest.objects.filter(
+        from_center=user_center
+    ).union(
+        CenterRequest.objects.filter(to_center=user_center)
+    ).distinct()
+
+    serializer = CenterRequestSerializer(requests, many=True) 
+    return Response(serializer.data, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def accept_request(request, request_id):
+    center_request = CenterRequest.objects.filter(pk=request_id, status="Pending").first()
+    if not center_request or center_request.to_center != request.user.center:
+        return Response({"error": "Unauthorized to accept this request"}, status=status.HTTP_403_FORBIDDEN)
+
+    center_request.status = "Accepted"
+    center_request.save()
+
+    shipping_data = {
+        "from_center": center_request.from_center.id,
+        "to_center": center_request.to_center.id,
+        "from_address": request.data.get("from_address"),
+        "to_address": request.data.get("to_address"),
+        "in_transit": True
+    }
+    shipping_serializer = CenterShippingSerializer(data=shipping_data)
+    if shipping_serializer.is_valid():
+        shipping_serializer.save()
+        return Response({"status": "Request Accepted, Shipment Created"}, status=status.HTTP_200_OK)
+    else:
+        return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_shipment_status(request, shipment_id):
+    try:
+        shipment = CenterShipping.objects.get(pk=shipment_id)
+    except CenterShipping.DoesNotExist:
+        return Response({"error": "Shipment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = CenterShippingSerializer(shipment, data={"in_transit": True}, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"status": "Shipment status updated to in transit"}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_received(request, shipment_id):
+    try:
+        shipment = CenterShipping.objects.get(pk=shipment_id, in_transit=True)
+    except CenterShipping.DoesNotExist:
+        return Response({"error": "Shipment not in transit or does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    receive_data = {
+        "shipping": shipment.id,
+        "timestamp": request.data.get("timestamp"),
+        "received": True
+    }
+    receive_serializer = CenterReceiveSerializer(data=receive_data)
+    if receive_serializer.is_valid():
+        receive_serializer.save()
+        shipment.in_transit = False 
+        shipment.save()
+        return Response({"status": "Shipment marked as received"}, status=status.HTTP_200_OK)
+    return Response(receive_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
