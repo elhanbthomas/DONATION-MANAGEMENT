@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer, CenterRegistrationSerializer
+from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
 
 @api_view(['POST'])
 def registerVolunteer(request):
@@ -29,7 +29,7 @@ def registerDonor(request):
 
 from donor.models import Donor
 from center.models import Volounteer
-from .serializers import DonorPhoneSerializer, VolunteerPhoneSerializer
+from .serializers import DonorDetailsSerializer, VolunteerDetailSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -38,7 +38,7 @@ def get_details(request):
     volunteer = Volounteer.objects.filter(user=request.user).first()
     
     if donor:
-        serializer = DonorPhoneSerializer(donor)
+        serializer = DonorDetailsSerializer(donor)
         user_type = 'donor'
     elif volunteer:
 

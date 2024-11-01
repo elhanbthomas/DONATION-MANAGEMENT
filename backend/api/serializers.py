@@ -112,7 +112,7 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             center = profile_data['center'],
             latitude = profile_data['latitude'],
             longitude = profile_data['longitude']
-        
+        )
         for num in phone_number:
             PhoneDonor.objects.create(donor=donor, **num)
         
