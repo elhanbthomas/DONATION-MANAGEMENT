@@ -227,7 +227,7 @@ from .serializers import CenterRequestSerializer,CenterRequestCreateSerializer,C
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def create_request(request):
-    serializer = CenterRequestCreateSerializer(data=request.data, context={'request': request})
+    serializer = CenterRequestCreateSerializer(data=request.data, context={'request': request}, many=True)
     if serializer.is_valid():
         serializer.save()
         return Response({"status": "Request Created"}, status=status.HTTP_201_CREATED)

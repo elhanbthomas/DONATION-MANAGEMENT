@@ -69,29 +69,57 @@ class CenterListSerializer(serializers.ModelSerializer):
 
 
 
-class CenterRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CenterRequest
-        fields = []
+from rest_framework import serializers
 
-class CenterRequestCreateSerializer(serializers.ModelSerializer):
-    
+class CenterRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterRequest
         fields = ['item_type', 'quantity']
 
-    
     def create(self, validated_data):
         user = self.context['request'].user
         volunteer = Volounteer.objects.get(user=user)
+        
         count = CenterRequest.objects.count()
-        id = 'Req' + str(count+1)
+        id = 'Req' + str(count + 1)
+        
         c_request = CenterRequest.objects.create(
-            req_id = id,
-            center = volunteer.Center_id,
+            req_id=id,
+            center=volunteer.Center_id,
             **validated_data
         )
+        
         return c_request
+
+
+class CenterRequestListSerializer(serializers.ListSerializer):
+    child = CenterRequestSerializer()
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        volunteer = Volounteer.objects.get(user=user)
+
+        requests = []
+        for data in validated_data:
+            count = CenterRequest.objects.count()
+            id = 'Req' + str(count + 1)
+            c_request = CenterRequest.objects.create(
+                req_id=id,
+                center=volunteer.Center_id,
+                **data
+            )
+            requests.append(c_request)
+
+        return requests
+
+
+# Then, in your view or serializer that accepts multiple entries:
+class CenterRequestCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CenterRequest
+        fields = ['item_type', 'quantity']
+        list_serializer_class = CenterRequestListSerializer
+
 
 class CenterShippingSerializer(serializers.ModelSerializer):
     fromCenter = Center
