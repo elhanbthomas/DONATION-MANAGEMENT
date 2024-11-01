@@ -224,7 +224,7 @@ def center_list(request):
     return Response(serializer.data, status=200)
 #-------------------------CENTER VIEWS ------------------------------------------------------------------
 from .models import CenterRequest,CenterShipping
-from .serializers import CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
+from .serializers import CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer, ListCenterRequestSerializer
 
 @api_view(['POST'])
 @permission_classes([IsStaffUser])
@@ -247,7 +247,7 @@ def list_other_center_requests(request):
         center = volunteer.Center_id 
         print(center)
         requests = CenterRequest.objects.exclude(Q(center=center) | Q(isShipped=True))
-        serializer = CenterRequestSerializer(requests, many=True) 
+        serializer = ListCenterRequestSerializer(requests, many=True) 
         return Response(serializer.data, status=200)
     except Volounteer.DoesNotExist:
         return Response({'error':'list not found'},status=404)
@@ -261,8 +261,6 @@ def accept_request(request):
     print(center.pk)
     try:
         center_request = CenterRequest.objects.get(pk=request_id)
-        center_request.isShipped = True
-        center_request.save()
         
         shipping_data = {
             "from_center": center.pk,
@@ -286,7 +284,10 @@ def accept_request(request):
         
         shipping_serializer = CenterShippingSerializer(data=shipping_data)
         if shipping_serializer.is_valid():
-            shipping_serializer.save()    
+            shipping_serializer.save() 
+            
+            center_request.isShipped = True
+            center_request.save()   
             return Response({"status": "Request Accepted, Shipment Initiated, Inventory updated"}, status=status.HTTP_200_OK)
         
         return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -294,19 +295,19 @@ def accept_request(request):
     except CenterRequest.DoesNotExist:
         return Response({'error':'request not found'},status=404)
 
-@api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
-def update_shipment_status(request, shipment_id):
-    try:
-        shipment = CenterShipping.objects.get(pk=shipment_id)
-    except CenterShipping.DoesNotExist:
-        return Response({"error": "Shipment not found"}, status=status.HTTP_404_NOT_FOUND)
+# @api_view(['PATCH'])
+# @permission_classes([IsAuthenticated])
+# def update_shipment_status(request, shipment_id):
+#     try:
+#         shipment = CenterShipping.objects.get(pk=shipment_id)
+#     except CenterShipping.DoesNotExist:
+#         return Response({"error": "Shipment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = CenterShippingSerializer(shipment, data={"in_transit": True}, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"status": "Shipment status updated to in transit"}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     serializer = CenterShippingSerializer(shipment, data={"in_transit": True}, partial=True)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response({"status": "Shipment status updated to in transit"}, status=status.HTTP_200_OK)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

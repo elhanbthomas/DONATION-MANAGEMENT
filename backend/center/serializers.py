@@ -137,3 +137,10 @@ class CenterReceiveSerializer(serializers.ModelSerializer):
         model = CenterReceive
         fields = ['ShippingID', 'timestamp', 'Received']
 
+
+
+class ListCenterRequestSerializer(serializers.ModelSerializer):
+    item_type = ItemTypeSerializer()
+    class Meta:
+        model = CenterRequest
+        exclude = ['center']
