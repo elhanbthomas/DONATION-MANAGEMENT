@@ -4,10 +4,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-
+from .permissions import IsStaffUser
 from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
 
 @api_view(['POST'])
+@permission_classes([IsStaffUser])
 def registerVolunteer(request):
     serializer = VolunteerRegistrationSerializer(data = request.data)
     
@@ -43,8 +44,8 @@ def get_details(request):
     elif volunteer:
 
         serializer = VolunteerDetailSerializer(volunteer)
-        if request.user.is_superuser:
-            user_type = 'super'
+        if request.user.is_staff:
+            user_type = 'staff'
         else:
             user_type = 'volunteer'
 
