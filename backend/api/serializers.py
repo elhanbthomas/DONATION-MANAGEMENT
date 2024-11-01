@@ -73,7 +73,7 @@ class DonorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Donor
-        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address', 'center' 'latitude', 'longitude']
+        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address', 'latitude', 'longitude']
 
 class DonorRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
@@ -109,7 +109,6 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             district = profile_data['district'],
             address = profile_data['address'],
             pincode = profile_data['pincode'],
-            center = profile_data['center'],
             latitude = profile_data['latitude'],
             longitude = profile_data['longitude']
         )
