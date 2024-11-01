@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import VolounteerPickup, Volounteer
+from .models import VolounteerPickup, Volounteer, PhoneVolounteer, Inventory, Center
 from item.models import ItemPickup, ItemType
 from donor.models import Donor, PhoneDonor
 from center.models import Center, CenterRequest,CenterShipping, CenterReceive
@@ -22,14 +22,14 @@ class ItemTypeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ItemType
-        fields = ['name', 'description']
+        exclude = ['timestamp']
 
 class ItemPickupSerializer(serializers.ModelSerializer):
     donor = DonorSerializer()
     item_type = ItemTypeSerializer()
     class Meta:
         model = ItemPickup
-        fields = ['item_type', 'quantity', 'description', 'image', 'requested_at', 'donor']
+        exclude = ['center']
 
 class GetVolunteerPickupSerializer(serializers.ModelSerializer):
     pickup_id = ItemPickupSerializer()
@@ -38,10 +38,36 @@ class GetVolunteerPickupSerializer(serializers.ModelSerializer):
         fields = ['id', 'pickup_id', 'assigned_time', 'isPicked', 'isReceived']
 
 
-class CenterRegistrationSerializer(serializers.ModelSerializer):
+#----------------------------------------------------------------------------------------------------------
+class VolunteerPhoneSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = PhoneVolounteer
+        fields = ['number']
+
+class VolunteerListSerializer(serializers.ModelSerializer):
+    phone = VolunteerPhoneSerializer(many=True, source='phonevolounteer_set')
+    class Meta:
+        model = Volounteer
+        exclude = ['Center_id', 'user']
+
+
+
+class InventoryListSerializer(serializers.ModelSerializer):
+    item_type = ItemTypeSerializer()
+    
+    class Meta:
+        model = Inventory
+        exclude = ['center']
+
+
+class CenterListSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Center
-        fields = [ 'name', 'email', 'isMain', 'City', 'State']
+        fields = '__all__'
+
+
 
 class CenterRequestSerializer(serializers.ModelSerializer):
     Center_id = CenterRegistrationSerializer()
@@ -74,3 +100,4 @@ class CenterReceiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterReceive
         fields = ['ShippingID', 'timestamp', 'Received']
+

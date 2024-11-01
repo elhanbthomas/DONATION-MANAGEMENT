@@ -73,7 +73,7 @@ class DonorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Donor
-        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address']
+        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address', 'center' 'latitude', 'longitude']
 
 class DonorRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
@@ -108,16 +108,25 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             city = profile_data['city'],
             district = profile_data['district'],
             address = profile_data['address'],
-            pincode = profile_data['pincode']
-        )
+            pincode = profile_data['pincode'],
+            center = profile_data['center'],
+            latitude = profile_data['latitude'],
+            longitude = profile_data['longitude']
         
         for num in phone_number:
             PhoneDonor.objects.create(donor=donor, **num)
         
         return user
 
-#------------------------------------CENTER REGISTRATION ----------------------------------------------
-class CenterRegistrationSerializer(serializers.ModelSerializer):
+
+
+class DonorDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Center
-        fields = ['CenterID', 'name', 'email' ,'isMain', 'City', 'State']
+        model = Donor
+        exclude = ['user']
+
+
+class VolunteerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Volounteer
+        exclude = ['user']

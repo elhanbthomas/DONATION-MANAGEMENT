@@ -41,21 +41,15 @@ def get_details(request):
         serializer = DonorPhoneSerializer(donor)
         user_type = 'donor'
     elif volunteer:
-        serializer = VolunteerPhoneSerializer(volunteer)
-        user_type = 'volunteer'
-    
+
+        serializer = VolunteerDetailSerializer(volunteer)
+        if request.user.is_superuser:
+            user_type = 'super'
+        else:
+            user_type = 'volunteer'
+
     else:
         return Response({'message': 'Record not found'}, status=status.HTTP_400_BAD_REQUEST)
     
     return Response({'user_details':serializer.data, 'user_type':user_type}, status=status.HTTP_200_OK)
 
-
-#--------------------------------------CENTER REGISTRATION --------------------------------------------
-@api_view(['POST'])
-def registerCenter(request):
-    serializer = CenterRegistrationSerializer(data = request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response({'message':'Registrasion successfull'}, status=status.HTTP_200_OK)
-    return Response({'message':'Registration unsuccessful','error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

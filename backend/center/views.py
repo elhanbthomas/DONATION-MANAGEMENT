@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from item.models import ItemPickup, ItemReceive
-from .models import VolounteerPickup, Volounteer, Inventory
+from .models import VolounteerPickup, Volounteer, Inventory, Center
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -23,6 +23,8 @@ def pickup_request(request):
             volunteer_pickup = VolounteerPickup.objects.create(
                 pickup_id = donation
             )
+            donation.forPickup = True
+            donation.save()
             return Response({'message':'request send'}, status=status.HTTP_200_OK)
         except ItemPickup.DoesNotExist:
             return Response({'error': 'Request not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -50,7 +52,7 @@ def assign_volunteer(request):
 
 
 
-from .serializers import GetVolunteerPickupSerializer
+from .serializers import GetVolunteerPickupSerializer, ItemPickupSerializer, VolunteerListSerializer, InventoryListSerializer, CenterListSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pickupDetails(request):
@@ -72,7 +74,7 @@ def pickupDetails(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_pickup_status(request):
-  
+    pk = request.data.get('id')
     isPicked = request.data.get('isPicked')
     isReceived = request.data.get('isReceived')
     user = request.user
@@ -81,14 +83,18 @@ def change_pickup_status(request):
         volunteer = Volounteer.objects.get(user=user)
         print(volunteer)
         try:
-            pickup = VolounteerPickup.objects.get(volunteer=volunteer)
+            pickup = VolounteerPickup.objects.get(volunteer=volunteer,pk=pk)
+            item_pickup = pickup.pickup_id
             if isPicked:
                 pickup.isPicked = isPicked
                 pickup.save()
+                item_pickup.isPicked = isPicked
+                item_pickup.save()
             if isReceived:
                 pickup.isReceived = isReceived
                 pickup.save()
-                item_pickup = pickup.pickup_id
+                item_pickup.isAccepted = isReceived
+                item_pickup.save()
                 item_receive = ItemReceive.objects.create(
                     Volounteer_id = volunteer,
                     center = volunteer.Center_id,
@@ -115,12 +121,107 @@ def change_pickup_status(request):
             return Response({'message': 'status updated'})
         
         except VolounteerPickup.DoesNotExist:
-            return Response({'error':'pickup nor found'},status=status.HTTP_404_NOT_FOUND) 
+            return Response({'error':'pickup not found'},status=status.HTTP_404_NOT_FOUND) 
     except Volounteer.DoesNotExist:
         return Response({'error':'volunteer not found'},status=status.HTTP_404_NOT_FOUND)
     
+    
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def showDonorRequests(request):
+    
+    try:
+        user = Volounteer.objects.get(user=request.user)
+        print(user)
+        center = user.Center_id
+        items = ItemPickup.objects.filter(center=center)
+        serializer = ItemPickupSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Volounteer.DoesNotExist:
+        print('volunteer not found')
+        return Response({'error': 'Unable to get request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def direct_receive(request):        # donation acepted directly from center
+    volunteer = Volounteer.objects.get(user=request.user)
+    pickup_id = request.data.get('request_id')
+    isAccepted = request.data.get('isAccepted')
+    try:
+        donor_request = ItemPickup.objects.get(pk=pickup_id)
+        donor_request.isAccepted = isAccepted
+        donor_request.isPicked = isAccepted
+        donor_request.save()
+        
+        item_receive = ItemReceive.objects.create(
+            pickup = donor_request,
+            center = volunteer.Center_id
+        )
+        
+        if item_receive:
+            count = Inventory.objects.count()
+            i_id = str(volunteer.Center_id) + ': ' + str(count+1)
+            inventory, created = Inventory.objects.get_or_create(
+                center = volunteer.Center_id,
+                item_type = donor_request.item_type,
+                defaults= {'inventory_id':i_id,'quantity':donor_request.quantity}
+            )
+            
+            if not created:
+                quantity = inventory.quantity
+                inventory.quantity = quantity + donor_request.quantity
+                inventory.save()
+                return Response({'message': 'Inventory updated'},status=200)
+
+            return Response({'message': 'Inventory created'})
+        
+        return Response({'message': 'status updated'})
+    
+    except ItemPickup.DoesNotExist:
+        return Response({'error':'record not found'},status=404)
+
+# ------------------------------LISTS---------------------------------------------------------
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def volunteer_list(request):
+    try:
+        user = Volounteer.objects.get(user=request.user)
+        print(user.Center_id)
+        center = Center.objects.get(pk=user.Center_id.pk)
+        volunteers = Volounteer.objects.filter(Center_id=center, user__is_superuser = False)
+        serializer = VolunteerListSerializer(volunteers, many=True)
+        return Response(serializer.data, status=200)
+    except Volounteer.DoesNotExist:
+        return Response({'error': 'list not found'},status=404)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def inventory_list(request):
+    
+    volunteer = Volounteer.objects.get(user=request.user)
+    center = volunteer.Center_id
+    
+    try:
+        inventory = Inventory.objects.filter(center=center)
+        serializer = InventoryListSerializer(inventory, many=True)
+        return Response(serializer.data, status=200)
+    except Inventory.DoesNotExist:
+        return Response({'error': 'inventory not found'}, status=404)
+    
+@api_view(['GET'])
+def center_list(request):
+    
+    centers = Center.objects.all()
+    serializer = CenterListSerializer(centers, many=True)
+    return Response(serializer.data, status=200)
 #-------------------------CENTER VIEWS ------------------------------------------------------------------
-from .models import Center, CenterRequest,CenterShipping
+from .models import CenterRequest,CenterShipping
 from .serializers import CenterRegistrationSerializer, CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
 from django.shortcuts import get_object_or_404
 
@@ -206,3 +307,4 @@ def mark_received(request, shipment_id):
         shipment.save()
         return Response({"status": "Shipment marked as received"}, status=status.HTTP_200_OK)
     return Response(receive_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

@@ -17,8 +17,3 @@ class ItemPickupSerializer(serializers.ModelSerializer):
         ) 
         return request
 
-class GetPickupsSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = ItemPickup
-        fields = '__all__'

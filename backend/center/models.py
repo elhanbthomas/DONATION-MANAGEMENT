@@ -25,7 +25,7 @@ class Volounteer(models.Model):
     Center_id = models.ForeignKey(Center, on_delete = models.PROTECT, blank=True, null=True)
     
     def __str__(self):
-        return self.v_id + ": " + self.name   
+        return self.v_id + ": " + self.name
 
 class PhoneVolounteer(models.Model):
     volunteer = models.ForeignKey(Volounteer, on_delete=models.CASCADE)
@@ -43,7 +43,8 @@ class VolounteerPickup(models.Model):
     isReceived = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.volunteer}: {self.pickup_id}"
+        return f"{self.volunteer}: {self.pickup_id} ({str(self.pk)})"
+
 
 
 class Inventory(models.Model):
@@ -52,7 +53,9 @@ class Inventory(models.Model):
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     last_updated = models.DateTimeField(auto_now=True)
-
+    
+    def __str__(self):
+        return self.inventory_id
 
 
 
@@ -77,5 +80,6 @@ class CenterReceive(models.Model):
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT, null=True)
     center = models.ForeignKey(Center, on_delete=models.PROTECT, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 

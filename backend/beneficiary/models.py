@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Beneficiary(models.Model):
     B_id = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=100)
@@ -23,5 +24,7 @@ class BeneficiaryRequest(models.Model):
     
     def __str__(self):
         return f"{self.beneficiary}: {self.item_type}"
-    
+
+
+
     
