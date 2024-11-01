@@ -128,6 +128,7 @@ class CenterShippingSerializer(serializers.ModelSerializer):
         fields = ['from_center', 'c_request']
     
     def create(self, validated_data):
+        print(validated_data)
         return super().create(validated_data)
 
 class CenterReceiveSerializer(serializers.ModelSerializer):

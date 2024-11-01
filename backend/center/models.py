@@ -48,7 +48,7 @@ class VolounteerPickup(models.Model):
 
 
 class Inventory(models.Model):
-    inventory_id = models.CharField(max_length=50)
+    inventory_id = models.CharField(max_length=50, primary_key=True)
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
@@ -73,7 +73,7 @@ class CenterRequest(models.Model):
 
 class CenterShipping(models.Model):
     c_request = models.ForeignKey(CenterRequest, on_delete=models.PROTECT)
-    from_center  = models.ForeignKey(Center, on_delete=models.CASCADE)
+    from_center  = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
     shipped_time = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

@@ -13,5 +13,6 @@ urlpatterns = [
     
     path('center/request', views.create_request, name='center_request'),
     path('center/list/requests', views.list_other_center_requests, name='other_center_requests'),
+    path('center/accept', views.accept_request, name='shipment_status')
 
 ]

@@ -253,26 +253,43 @@ def list_other_center_requests(request):
         return Response({'error':'list not found'},status=404)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsStaffUser])
 def accept_request(request):
     request_id = request.data.get('req_id')
     volunteer = Volounteer.objects.get(user=request.user)
     center = volunteer.Center_id
+    print(center.pk)
     try:
         center_request = CenterRequest.objects.get(pk=request_id)
         center_request.isShipped = True
         center_request.save()
         
         shipping_data = {
-        "from_center": center,
-        "c_request": center_request
+            "from_center": center.pk,
+            "c_request": center_request
         }
+        
+        item_type = center_request.item_type
+        try:
+            inventory = Inventory.objects.get(center=center, item_type=item_type)
+            if inventory.quantity >= center_request.quantity:
+                inventory.quantity -= center_request.quantity
+                inventory.save()
+            else:
+                return Response(
+                    {'error': 'Not enough inventory to fulfill the request'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+    
+        except Inventory.DoesNotExist:
+            return Response({'error': 'Item not found in inventory'}, status=status.HTTP_404_NOT_FOUND)
+        
         shipping_serializer = CenterShippingSerializer(data=shipping_data)
         if shipping_serializer.is_valid():
-            shipping_serializer.save()
-            return Response({"status": "Request Accepted, Shipment Created"}, status=status.HTTP_200_OK)
-        else:
-            return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            shipping_serializer.save()    
+            return Response({"status": "Request Accepted, Shipment Initiated, Inventory updated"}, status=status.HTTP_200_OK)
+        
+        return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     except CenterRequest.DoesNotExist:
         return Response({'error':'request not found'},status=404)
