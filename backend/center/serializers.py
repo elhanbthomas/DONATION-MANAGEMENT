@@ -47,7 +47,7 @@ class CenterRequestSerializer(serializers.ModelSerializer):
     Center_id = CenterRegistrationSerializer()
     class Meta:
         model = CenterRequest
-        fields = ['description', 'quantity', 'Center_id']
+        fields = []
 
 class CenterRequestCreateSerializer(serializers.ModelSerializer):
     Center_id = serializers.PrimaryKeyRelatedField(queryset=Center.objects.all())  # Use ID instead of full Center

@@ -47,42 +47,35 @@ class VolounteerPickup(models.Model):
 
 
 class Inventory(models.Model):
+    inventory_id = models.CharField(max_length=50)
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
     item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     last_updated = models.DateTimeField(auto_now=True)
 
+
+
+
 class CenterRequest(models.Model):
-    description = models.TextField(max_length=200)
+    req_id = models.CharField(max_length=20, primary_key=True)
+    item_type = models.ForeignKey('item.ItemType', on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
-    status = models.CharField(max_length=20, default='Pending')
-    fromCenter = models.ForeignKey(Center, on_delete=models.CASCADE)
-    to_center = models.ForeignKey(Center, on_delete=models.CASCADE)
-    def accept(self):
-        self.status = "Accepted"
-        self.save()
-        CenterShipping.objects.create(
-            from_center=self.to_center,
-            to_center=self.from_center,
-            in_transit=True,
-        )
+    center = models.ForeignKey(Center, on_delete=models.CASCADE)
+    isShipped = models.BooleanField(default=False)
+    isReceived = models.BooleanField(default=False)
+    request_time = models.DateTimeField(auto_now_add=True, null=True)
+
 
 class CenterShipping(models.Model):
-    fromCenter = models.ForeignKey(Center, on_delete= models.CASCADE)
-    toCenter  = models.ForeignKey(Centeron_delete= models.CASCADE)
-    fromAdress = models.CharField(max_length=255,null=True)
-    toAdress = models.CharField(max_length=255,null=True)
-    inTransit = models.BooleanField(default=False)
+    c_request = models.ForeignKey(CenterRequest, on_delete=models.PROTECT)
+    from_center  = models.ForeignKey(Center, on_delete=models.CASCADE)
+    shipped_time = models.DateTimeField(auto_now_add=True, null=True)
+
 
 class CenterReceive(models.Model):
-    ShippingID = models.ForeignKey(CenterShipping, null = False)
-    timestamp = models.DateTimeField(null = False)
-    Received = models.BooleanField(default=False)
+    ShippingID = models.ForeignKey(CenterShipping, on_delete=models.PROTECT)
+    item_type = models.ForeignKey('item.ItemType', on_delete=models.PROTECT, null=True)
+    center = models.ForeignKey(Center, on_delete=models.PROTECT, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-
-
-# class CenterShipment(models.Model):
-#     CenterShipment_id = models.CharField(max_length=5,primary_key=True)
-#     timestamp = models.DateTimeField()
-#     agent = models.CharField(max_length=50)
 
