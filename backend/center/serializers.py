@@ -122,11 +122,13 @@ class CenterRequestCreateSerializer(serializers.ModelSerializer):
 
 
 class CenterShippingSerializer(serializers.ModelSerializer):
-    fromCenter = Center
-    toCenter = Center
+    
     class Meta:
         model = CenterShipping
-        fields = ['fromCenter' 'toCenter','fromAddress','toAdress','inTransit']
+        fields = ['from_center', 'c_request']
+    
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 class CenterReceiveSerializer(serializers.ModelSerializer):
     ShippingID = CenterShipping

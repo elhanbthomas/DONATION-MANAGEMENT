@@ -4,7 +4,8 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+from api.permissions import IsStaffUser
 
 from item.models import ItemPickup, ItemReceive
 from .models import VolounteerPickup, Volounteer, Inventory, Center
@@ -33,7 +34,7 @@ def pickup_request(request):
         return Response({'error':'user not found'},status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsStaffUser])
 def assign_volunteer(request):
   
     vol_id = request.data.get('vol_id')
@@ -128,7 +129,7 @@ def change_pickup_status(request):
     
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsStaffUser])
 def showDonorRequests(request):
     
     try:
@@ -146,7 +147,7 @@ def showDonorRequests(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsStaffUser])
 def direct_receive(request):        # donation acepted directly from center
     volunteer = Volounteer.objects.get(user=request.user)
     pickup_id = request.data.get('request_id')
@@ -201,7 +202,7 @@ def volunteer_list(request):
     
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsStaffUser])
 def inventory_list(request):
     
     volunteer = Volounteer.objects.get(user=request.user)
@@ -225,7 +226,7 @@ from .models import CenterRequest,CenterShipping
 from .serializers import CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsStaffUser])
 def create_request(request):
     serializer = CenterRequestCreateSerializer(data=request.data, context={'request': request}, many=True)
     if serializer.is_valid():
@@ -234,44 +235,46 @@ def create_request(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from django.db.models import Q
+
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
-def list_center_requests(request):
+@permission_classes([IsStaffUser])
+def list_other_center_requests(request):
     user = request.user
     try: 
         volunteer = Volounteer.objects.get(user=user)
         center = volunteer.Center_id 
-        requests = CenterRequest.objects.exclude(
-            center=center
-        )
+        print(center)
+        requests = CenterRequest.objects.exclude(Q(center=center) | Q(isShipped=True))
         serializer = CenterRequestSerializer(requests, many=True) 
         return Response(serializer.data, status=200)
     except Volounteer.DoesNotExist:
-        return Response({'error','list not found'},status=404)
+        return Response({'error':'list not found'},status=404)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def accept_request(request, request_id):
-    center_request = CenterRequest.objects.filter(pk=request_id, status="Pending").first()
-    if not center_request or center_request.to_center != request.user.center:
-        return Response({"error": "Unauthorized to accept this request"}, status=status.HTTP_403_FORBIDDEN)
-
-    center_request.status = "Accepted"
-    center_request.save()
-
-    shipping_data = {
-        "from_center": center_request.from_center.id,
-        "to_center": center_request.to_center.id,
-        "from_address": request.data.get("from_address"),
-        "to_address": request.data.get("to_address"),
-        "in_transit": True
-    }
-    shipping_serializer = CenterShippingSerializer(data=shipping_data)
-    if shipping_serializer.is_valid():
-        shipping_serializer.save()
-        return Response({"status": "Request Accepted, Shipment Created"}, status=status.HTTP_200_OK)
-    else:
-        return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def accept_request(request):
+    request_id = request.data.get('req_id')
+    volunteer = Volounteer.objects.get(user=request.user)
+    center = volunteer.Center_id
+    try:
+        center_request = CenterRequest.objects.get(pk=request_id)
+        center_request.isShipped = True
+        center_request.save()
+        
+        shipping_data = {
+        "from_center": center,
+        "c_request": center_request
+        }
+        shipping_serializer = CenterShippingSerializer(data=shipping_data)
+        if shipping_serializer.is_valid():
+            shipping_serializer.save()
+            return Response({"status": "Request Accepted, Shipment Created"}, status=status.HTTP_200_OK)
+        else:
+            return Response(shipping_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    except CenterRequest.DoesNotExist:
+        return Response({'error':'request not found'},status=404)
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])

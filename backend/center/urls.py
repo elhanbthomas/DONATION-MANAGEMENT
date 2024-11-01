@@ -11,6 +11,7 @@ urlpatterns = [
     path('center/inventory', views.inventory_list, name='inventory_list'),
     path('center/list', views.center_list, name='center_list'),
     
-    path('center/request', views.create_request, name='center_request')
+    path('center/request', views.create_request, name='center_request'),
+    path('center/list/requests', views.list_other_center_requests, name='other_center_requests'),
 
 ]
