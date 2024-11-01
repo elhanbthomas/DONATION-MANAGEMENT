@@ -9,6 +9,8 @@ urlpatterns = [
     
     path('api/register/volunteer', views.registerVolunteer, name='volunteer_register'),
     path('api/register/donor', views.registerDonor, name='donor_register'),
-    path('api/details', views.get_details, name="get_details")
+    path('api/details', views.get_details, name="get_details"),
+    
+    path('logout', views.logout_view, name='logout')
 ]
 
