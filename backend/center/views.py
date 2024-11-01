@@ -222,8 +222,7 @@ def center_list(request):
     return Response(serializer.data, status=200)
 #-------------------------CENTER VIEWS ------------------------------------------------------------------
 from .models import CenterRequest,CenterShipping
-from .serializers import CenterRegistrationSerializer, CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
-from django.shortcuts import get_object_or_404
+from .serializers import CenterRequestSerializer,CenterRequestCreateSerializer,CenterShippingSerializer,CenterReceiveSerializer
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])

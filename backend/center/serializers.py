@@ -70,23 +70,28 @@ class CenterListSerializer(serializers.ModelSerializer):
 
 
 class CenterRequestSerializer(serializers.ModelSerializer):
-    Center_id = CenterRegistrationSerializer()
     class Meta:
         model = CenterRequest
         fields = []
 
 class CenterRequestCreateSerializer(serializers.ModelSerializer):
-    Center_id = serializers.PrimaryKeyRelatedField(queryset=Center.objects.all())  # Use ID instead of full Center
-
+    
     class Meta:
         model = CenterRequest
-        fields = ['description', 'quantity', 'Center_id']
+        fields = ['item_type', 'quantity']
 
+    
     def create(self, validated_data):
         user = self.context['request'].user
-        from_center = user.center  
-        validated_data['from_center'] = from_center
-        return super().create(validated_data)
+        volunteer = Volounteer.objects.get(user=user)
+        count = CenterRequest.objects.count()
+        id = 'Req' + str(count+1)
+        c_request = CenterRequest.objects.create(
+            req_id = id,
+            center = volunteer.Center_id,
+            **validated_data
+        )
+        return c_request
 
 class CenterShippingSerializer(serializers.ModelSerializer):
     fromCenter = Center

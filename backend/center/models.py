@@ -68,11 +68,14 @@ class CenterRequest(models.Model):
     isReceived = models.BooleanField(default=False)
     request_time = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self):
+        return self.req_id
 
 class CenterShipping(models.Model):
     c_request = models.ForeignKey(CenterRequest, on_delete=models.PROTECT)
-    from_center  = models.ForeignKey(Center, on_delete=models.CASCADE)
+    to_center  = models.ForeignKey(Center, on_delete=models.CASCADE)
     shipped_time = models.DateTimeField(auto_now_add=True, null=True)
+
 
 
 class CenterReceive(models.Model):

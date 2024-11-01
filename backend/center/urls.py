@@ -9,6 +9,8 @@ urlpatterns = [
     path('center/volunteers', views.volunteer_list, name='volunteer_list'),
     path('center/donor/receive', views.direct_receive, name='direct_receive'),
     path('center/inventory', views.inventory_list, name='inventory_list'),
-    path('center/list', views.center_list, name='center_list')
+    path('center/list', views.center_list, name='center_list'),
+    
+    path('center/request', views.create_request, name='center_request')
 
 ]
