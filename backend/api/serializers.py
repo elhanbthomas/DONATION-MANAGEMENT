@@ -16,7 +16,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Volounteer
-        fields = ['name', 'email', 'city', 'house_no', 'phone', 'qualification', 'designation']
+        fields = ['name', 'email', 'city', 'address', 'phone', 'qualification', 'designation']
     
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
             name = profile_data['name'],
             email = profile_data['email'],
             city = profile_data['city'],
-            house_no = profile_data['house_no'],
+            address = profile_data['address'],
             qualification = profile_data['qualification'],
             designation = profile_data['designation']
         )

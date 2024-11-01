@@ -235,17 +235,19 @@ def create_request(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def list_center_requests(request):
-    user_center = request.user.center 
-    requests = CenterRequest.objects.filter(
-        from_center=user_center
-    ).union(
-        CenterRequest.objects.filter(to_center=user_center)
-    ).distinct()
-
-    serializer = CenterRequestSerializer(requests, many=True) 
-    return Response(serializer.data, status=200)
+    user = request.user
+    try: 
+        volunteer = Volounteer.objects.get(user=user)
+        center = volunteer.Center_id 
+        requests = CenterRequest.objects.exclude(
+            center=center
+        )
+        serializer = CenterRequestSerializer(requests, many=True) 
+        return Response(serializer.data, status=200)
+    except Volounteer.DoesNotExist:
+        return Response({'error','list not found'},status=404)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
