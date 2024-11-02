@@ -20,11 +20,20 @@ class BeneficiaryRequest(models.Model):
     quantity = models.IntegerField()
     beneficiary = models.ForeignKey(Beneficiary, on_delete=models.CASCADE)
     accepted_request = models.BooleanField(default=False)
+    # isDeliverd = models.BooleanField(default=False)
     request_time = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.beneficiary}: {self.item_type}"
+        return f"{self.beneficiary}: {self.item_type} id: {self.pk}"
 
 
 
-    
+class BeneficiaryShipment(models.Model):
+    bship_id = models.AutoField(primary_key=True)  # Auto-incrementing primary key
+    BR_id = models.ForeignKey(BeneficiaryRequest, on_delete=models.CASCADE, related_name="shipments")
+    V_id = models.ForeignKey('center.Volounteer', on_delete=models.CASCADE, related_name="deliveries", null=True)
+    isDelivered = models.BooleanField(default=False)
+    shipment_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Shipment {self.bship_id} for Request {self.BR_id} by Volunteer {self.V_id}"

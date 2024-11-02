@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from .models import Beneficiary, BeneficiaryRequest
+from .models import Beneficiary, BeneficiaryRequest, BeneficiaryShipment
 from item.models import ItemType
+
+
 
 class Requestserializer(serializers.ModelSerializer):
     
@@ -33,3 +35,26 @@ class BeneficiarySerializer(serializers.ModelSerializer):
             )
             
         return beneficiary
+    
+    
+from center.serializers import ItemTypeSerializer
+
+class BeneficiaryListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Beneficiary
+        exclude = ['createdAt']
+        
+        
+class ListBRequestSerializer(serializers.ModelSerializer):
+    item_type = ItemTypeSerializer()
+    beneficiary = BeneficiaryListSerializer()
+    class Meta:
+        model = BeneficiaryRequest
+        fields = '__all__'
+        
+        
+# class BeneficiaryShipmentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BeneficiaryShipment
+#         fields = '__all__'
