@@ -143,6 +143,7 @@ class CenterReceiveSerializer(serializers.ModelSerializer):
 
 
 class ListCenterRequestSerializer(serializers.ModelSerializer):
+    center = CenterListSerializer()
     item_type = ItemTypeSerializer()
     class Meta:
         model = CenterRequest
