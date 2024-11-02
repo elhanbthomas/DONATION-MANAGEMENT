@@ -59,7 +59,8 @@ def accept_beneficiary_request(request):
                 inventory.quantity -= quantity_requested
                 inventory.save()
                 return Response({'message': 'Beneficiary shipment created and inventory updated'}, status=status.HTTP_200_OK)
-        
+            else:
+                return Response({'error':'Insufficient items in inventory'})
         except Inventory.DoesNotExist:
             return Response({'error': 'Inventory not found'}, status=status.HTTP_404_NOT_FOUND)
     
