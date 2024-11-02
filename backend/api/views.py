@@ -8,7 +8,6 @@ from .permissions import IsStaffUser
 from .serializers import VolunteerRegistrationSerializer, DonorRegistrationSerializer
 
 @api_view(['POST'])
-@permission_classes([IsStaffUser])
 def registerVolunteer(request):
     serializer = VolunteerRegistrationSerializer(data = request.data)
     
