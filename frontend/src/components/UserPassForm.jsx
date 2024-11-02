@@ -1,11 +1,13 @@
 import { Login, Save } from '@mui/icons-material';
-import { InputLabel, FormControl, TextField, Stack, Card, Typography, Box, Button } from '@mui/material';
+import { InputLabel, FormControl, Select, MenuItem, TextField, Stack, Card, Typography, Box, Button, Alert } from '@mui/material';
 import * as React from 'react';
 
-export default function UserPassForm({ pageType, handleSubmit }) {
+export default function UserPassForm({ pageType, handleSubmit, error }) {
     const [data, setData] = React.useState({
         username: '',
-        password: ''
+        password: '',
+        confirmPassword: '',
+        userType: 'donor'
     })
     return (
         <>
@@ -32,6 +34,18 @@ export default function UserPassForm({ pageType, handleSubmit }) {
                         }}
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
+                        {error && <Alert severity='error'>{error}</Alert>}
+                    {pageType=='register' && 
+                    <FormControl fullWidth>
+                        You are:
+                        <Select
+                            value={data.userType}
+                            onChange={(e) => setData({...data, userType: e.target.value})}
+                        >
+                            <MenuItem value="donor">Donor</MenuItem>
+                            <MenuItem value="volunteer">Volunteer</MenuItem>
+                        </Select>
+                    </FormControl> }
                         <FormControl fullWidth>
                             <TextField
                                 autoComplete="username"

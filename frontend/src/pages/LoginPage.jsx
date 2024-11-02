@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const [error, setError] = React.useState('')
     const handleSubmit = async (data) => {
         try {
             const res = await axios.post(`http://localhost:8000/api/token/`, data, {
@@ -14,12 +15,12 @@ export default function LoginPage() {
             })
             localStorage.setItem("accessToken", res.data.access)
             localStorage.setItem("refreshToken", res.data.refresh)
-            navigate("/")
+            navigate("/dashboard")
         } catch (err) {
-            console.log(err)
+        setError("Invalid Credentials")
         }
     }
     return (
-        <UserPassForm pageType="login" handleSubmit={handleSubmit} />
+        <UserPassForm pageType="login" handleSubmit={handleSubmit} error={error}/>
     )
 }

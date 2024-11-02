@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import axios from 'axios';
+import { Autocomplete, Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import PhoneNumberInput from './PhoneNumberInput';
-import { Save } from '@mui/icons-material';
+import { AccountBox, Save } from '@mui/icons-material';
 
 export default function RegFormVolunteer({ handleSubmit }) {
+
     const [data, setData] = React.useState({
         name: '',
         email: '',
         city: '',
-        house_no: '',
+        address: '',
         phone: [],
         qualification: '',
         designation: '',
@@ -63,15 +65,17 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 />
             </FormControl>
             <FormControl>
-                <FormLabel htmlFor="house">House No.</FormLabel>
+                <FormLabel htmlFor="address">Address</FormLabel>
                 <TextField
-                    name="house"
+                    name="address"
                     required
                     fullWidth
-                    id="house"
-                    value={data.house_no}
+                    id="address"
+                    value={data.address}
+                    multiline
+                    rows={4}
                     placeholder='9/11'
-                    onChange={(e) => setData({ ...data, house_no: e.target.value })}
+                    onChange={(e) => setData({ ...data, address: e.target.value })}
                 />
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
@@ -99,7 +103,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-                <Button variant="outlined" type="submit" startIcon={<Save size="small" />} >Submit</Button>
+                <Button variant="outlined" type="submit" startIcon={<AccountBox size="small" />} >Submit</Button>
             </FormControl>
         </Box>
     )
