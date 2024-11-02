@@ -146,4 +146,4 @@ class ListCenterRequestSerializer(serializers.ModelSerializer):
     item_type = ItemTypeSerializer()
     class Meta:
         model = CenterRequest
-        exclude = ['center']
+        fields = '__all__'
