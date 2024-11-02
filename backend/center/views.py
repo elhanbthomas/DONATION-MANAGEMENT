@@ -42,7 +42,7 @@ def assign_volunteer(request):
     try:
         volunteer = Volounteer.objects.get(v_id=vol_id)
         try:
-            pickup = VolounteerPickup.objects.get(id=pickup_id)
+            pickup = VolounteerPickup.objects.get(pickup_id=pickup_id)
             pickup.volunteer = volunteer
             pickup.save()
             return Response({'message': 'volunteer assigned'},status=status.HTTP_200_OK)
