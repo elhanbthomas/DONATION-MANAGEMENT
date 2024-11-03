@@ -40,11 +40,15 @@ export default function ItemPickupList({ afterConfirmFn, buttonText, items }) {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center', alignItems: 'center', mt: 2 }}>
             {/* Render a list of items with a button to open the modal */}
-            <Box sx={{ width: '100%', maxWidth: 800, gap: 2, display: 'flex', flexDirection: 'column' }}>
-                {items.map((item) => (
-                    <ItemPickupCard handleButtonClick={() => handleOpen(item)} buttonText={buttonText} key={items.indexOf(item)} item={item} />
-                ))}
-            </Box>
+            {items.length > 0 ?
+                <Box sx={{ width: '100%', maxWidth: 800, gap: 2, display: 'flex', flexDirection: 'column' }}>
+                    {items.map((item) => (
+                        <ItemPickupCard handleButtonClick={() => handleOpen(item)} buttonText={buttonText} key={items.indexOf(item)} item={item} />
+                    ))}
+                </Box> :
+                <Typography variant="body1" color="textSecondary" sx={{ mt: 2 }}>
+                    No donations made
+                </Typography>}
 
             {/* Modal that shows details for the selected item */}
             <Modal

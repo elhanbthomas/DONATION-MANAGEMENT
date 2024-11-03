@@ -3,14 +3,36 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { Button } from '@mui/material';
+import { Button, Divider, List, ListItem, ListItemText, Stack, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import ItemPickupList from '../components/ItemPickupList';
 import NewItemPickup from './NewItemPickup';
+import { Account, AccountPopoverFooter, AccountPreview, SignOutButton } from '@toolpad/core/Account';
 
 
 
 function DonorDashboard({ session, authentication, router, appTheme, branding }) {
+
+    function CustomPopover() {
+        return (
+            <Stack direction="column">
+                <AccountPreview variant='expanded' />
+                <Divider />
+                <List>
+                    <ListItem>
+                        <ListItemText primary="No. of Donations" secondary={items.length} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary="No. of Pickups Requested" secondary={items.filter((item) => item.forPickup === true).length} />
+                    </ListItem>
+                </List>
+                <Divider />
+                <AccountPopoverFooter>
+                    <SignOutButton />
+                </AccountPopoverFooter>
+            </Stack>
+        )
+    }
     function AddItemPickupButton() {
 
         return <Button variant='outlined' startIcon={<Add fontSize="small" />} onClick={() => router.navigate('/new-donation')}>
@@ -68,7 +90,8 @@ function DonorDashboard({ session, authentication, router, appTheme, branding })
             branding={branding}
         >
             <DashboardLayout
-                slots={{ toolbarActions: AddItemPickupButton }}
+                slots={{ toolbarActions: AddItemPickupButton, toolbarAccount: Account }}
+                slotProps={{ toolbarAccount: { slots: { popoverContent: CustomPopover } } }}
                 hideNavigation
             >
                 {
