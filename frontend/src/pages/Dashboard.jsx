@@ -26,7 +26,7 @@ const appTheme = createTheme({
 });
 
 const branding = {
-  title: 'Donation Management',
+  title: 'HelpHub',
   logo: <Avatar src="/src/assets/logo.png" sx={{ mr: '5px' }} />
 }
 
@@ -54,7 +54,6 @@ function DynamicDashboard() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(res.data)
         setUserDetails(res.data)
         setIsLoading(false)
       } catch (err) {
