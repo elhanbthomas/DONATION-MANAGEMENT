@@ -3,9 +3,9 @@ import axios from 'axios'
 import { Box, Button, TextField, Typography, Stepper, Step, StepLabel, List, ListItem, IconButton, ListItemText, Autocomplete } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const itemOptions = ['I1', 'I2', 'I3', 'I4']; // Add more items as needed
 
 export default function BeneficiaryRequest({ goBack }) {
+  const [itemOptions, setItemOptions] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
@@ -17,6 +17,17 @@ export default function BeneficiaryRequest({ goBack }) {
     pincode: '',
     B_requests: [], // Array to store multiple items
   });
+  React.useEffect(() => {
+    async function fetchData() {
+      const res = await axios.get('http://127.0.0.1:8000/api/itemtypes', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      setItemOptions(res.data);
+    }
+    fetchData();
+  }, [])
 
   const handleSubmit = async () => {
     let token = localStorage.getItem('accessToken')
@@ -37,7 +48,7 @@ export default function BeneficiaryRequest({ goBack }) {
   const [currentItem, setCurrentItem] = useState({ item_type: '', quantity: '' }); // Temporary item data
 
   const handleNewItemChange = (event, value) => {
-    setCurrentItem((prev) => ({ ...prev, item_type: value }));
+    setCurrentItem((prev) => ({ ...prev, item_type: itemOptions.filter((item) => item.name === value)[0].type_id }));
   };
 
   const steps = ['Beneficiary Details', 'Beneficiary Request'];
@@ -101,8 +112,8 @@ export default function BeneficiaryRequest({ goBack }) {
 
             <Autocomplete
               fullWidth
-              options={itemOptions}
-              value={currentItem.item_type}
+              options={itemOptions.map((item) => item.name)}
+              value={itemOptions.filter((item) => item.type_id === currentItem.item_type)[0]?.name || ''}
               onChange={handleNewItemChange}
               renderInput={(params) => (
                 <TextField {...params} label="Item" margin="normal" />
@@ -130,7 +141,7 @@ export default function BeneficiaryRequest({ goBack }) {
                     <DeleteIcon />
                   </IconButton>
                 }>
-                  <ListItemText primary={item.item_type} secondary={`Quantity: ${item.quantity}`} />
+                  <ListItemText primary={itemOptions.filter((k) => k.type_id === item.item_type)[0]?.name} secondary={`Quantity: ${item.quantity}`} />
                 </ListItem>
               ))}
             </List>
