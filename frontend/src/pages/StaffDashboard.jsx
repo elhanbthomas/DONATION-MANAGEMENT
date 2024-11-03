@@ -115,7 +115,7 @@ function StaffDashboard({ session, authentication, router, appTheme, branding })
         else if (pathname === '/new-center-request') return <CenterRequestForm goBack={() => router.navigate('/center-request')} />
         else if (pathname === '/center-request') return <CenterRequestList />
         else if (pathname === '/inventory') return <InventoryView />
-        else return <StaffPickupList afterConfirmFn={setReceived} items={items} volunteers={volunteers} afterSelectFn={assignVolunteer} />
+        else return <StaffPickupList afterReceiveFn={setReceived} items={items} volunteers={volunteers} afterSelectFn={assignVolunteer} />
     }
 
     return (
