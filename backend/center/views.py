@@ -194,7 +194,7 @@ def volunteer_list(request):
         user = Volounteer.objects.get(user=request.user)
         print(user.Center_id)
         center = Center.objects.get(pk=user.Center_id.pk)
-        volunteers = Volounteer.objects.filter(Center_id=center, user__is_superuser = False)
+        volunteers = Volounteer.objects.filter(Center_id=center, user__is_staff = False)
         serializer = VolunteerListSerializer(volunteers, many=True)
         return Response(serializer.data, status=200)
     except Volounteer.DoesNotExist:
