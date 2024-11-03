@@ -91,7 +91,7 @@ export default function VolunteerPickupCard({ handlePicked, handleReceived, item
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        href={`http://maps.google.com/maps?z=12&t=m&q=loc:${item.donor.longitude}+${item.donor.latitude}`}
+                                        href={`http://maps.google.com/maps?z=12&t=m&q=loc:${item.donor.latitude}+${item.donor.longitude}`}
                                         target='_blank'
                                         sx={{ mt: 2, width: '100%' }}
                                     >
