@@ -1,10 +1,20 @@
 import * as React from 'react';
 import axios from 'axios';
-import { Autocomplete, Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import PhoneNumberInput from './PhoneNumberInput';
-import { AccountBox, Save } from '@mui/icons-material';
+import { AccountBox } from '@mui/icons-material';
 
 export default function RegFormVolunteer({ handleSubmit }) {
+
+    const [centers, setCenters] = React.useState([]);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            const res = await axios.get('http://localhost:8000/api/center/list');
+            setCenters(res.data);
+        }
+        fetchData();
+    }, []);
 
     const [data, setData] = React.useState({
         name: '',
@@ -14,6 +24,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
         phone: [],
         qualification: '',
         designation: '',
+        Center_id: '',
     })
 
     return (
@@ -80,6 +91,19 @@ export default function RegFormVolunteer({ handleSubmit }) {
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
             <Divider />
+            <FormControl fullWidth>
+                <FormLabel >Center</FormLabel>
+                <Select
+                    value={centers.filter((c) => c.CenterID === data.Center_id)[0]?.name}
+                    onChange={(e) => setData({ ...data, Center_id: e.target.value })}
+                >
+                    {
+                        centers.map((center) => {
+                            return <MenuItem value={center.CenterID}>{center.name}</MenuItem>
+                        })
+                    }
+                </Select>
+            </FormControl>
             <FormControl fullWidth>
                 <FormLabel >Qualification</FormLabel>
                 <Select
