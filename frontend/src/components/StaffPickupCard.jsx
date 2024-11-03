@@ -103,7 +103,7 @@ export default function StaffPickupCard({ handleButtonClick, buttonText, item })
 
                             }
 
-                            {(item.forPickup && !item.isPicked) || (!item.forPickup && !item.isAccepted)(
+                            {((item.forPickup && !item.isPicked) || (!item.forPickup && !item.isAccepted)) && (
                                 <ListItem>
                                     <Button
                                         variant="contained"
