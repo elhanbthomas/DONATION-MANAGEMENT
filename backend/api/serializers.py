@@ -16,7 +16,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Volounteer
-        fields = ['name', 'email', 'city', 'address', 'phone', 'qualification', 'designation']
+        fields = ['name', 'email', 'city', 'address', 'phone', 'qualification', 'designation', 'Center_id']
     
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
@@ -52,7 +52,8 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
             city = profile_data['city'],
             address = profile_data['address'],
             qualification = profile_data['qualification'],
-            designation = profile_data['designation']
+            designation = profile_data['designation'],
+            Center_id = profile_data['Center_id']
         )
         for num in phone_number:
             PhoneVolounteer.objects.create(volunteer=volunteer, **num)
