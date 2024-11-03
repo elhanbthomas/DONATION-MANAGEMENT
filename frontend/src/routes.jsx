@@ -32,10 +32,6 @@ const router = createBrowserRouter([
         element: <Dashboard userType={"volunteer"} />
     },
     {
-        path: '/new/donation',
-        element: <NewItemPickup />
-    },
-    {
         path: '/new/center-request',
         element: <CenterRequestForm />
     },

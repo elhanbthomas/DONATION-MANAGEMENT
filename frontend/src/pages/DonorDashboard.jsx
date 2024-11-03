@@ -5,19 +5,18 @@ import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import { useNavigate } from 'react-router';
 import ItemPickupList from '../components/ItemPickupList';
+import NewItemPickup from './NewItemPickup';
 
 
-function AddItemPickupButton() {
-    const navigate = useNavigate()
-
-    return <Button variant='outlined' startIcon={<Add fontSize="small" />} onClick={() => navigate('/new/donation')}>
-        Make Donation
-    </Button>
-}
 
 function DonorDashboard({ session, authentication, router, appTheme, branding }) {
+    function AddItemPickupButton() {
+
+        return <Button variant='outlined' startIcon={<Add fontSize="small" />} onClick={() => router.navigate('/new-donation')}>
+            Make Donation
+        </Button>
+    }
 
     const [items, setItems] = React.useState([])
     const reqVolPickup = async (item) => {
@@ -55,6 +54,7 @@ function DonorDashboard({ session, authentication, router, appTheme, branding })
     }, [])
 
     const renderDashboard = (pathname) => {
+        if (pathname === '/new-donation') return <NewItemPickup goBack={() => router.navigate('/donation')} />
         return <ItemPickupList afterConfirmFn={reqVolPickup} buttonText={"Request Pickup"} items={items} />
     }
 

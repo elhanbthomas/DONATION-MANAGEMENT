@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router';
 
 const steps = ['Enter Item Details', 'Upload Image', 'Review & Submit'];
 
-export default function NewItemPickup() {
+export default function NewItemPickup({ goBack }) {
   const navigate = useNavigate();
   const [itemOptions, setItemOptions] = React.useState([]);
   const [centerOptions, setCenterOptions] = React.useState([]);
@@ -160,7 +160,7 @@ export default function NewItemPickup() {
   };
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
           <CircularProgress />
@@ -169,7 +169,7 @@ export default function NewItemPickup() {
         <React.Fragment>
           {/* Back button at the top */}
           <Box sx={{ p: 2 }}>
-            <IconButton onClick={() => navigate('/dashboard')} sx={{ mb: 2 }} variant="outlined">
+            <IconButton onClick={() => goBack()} sx={{ mb: 2 }} variant="outlined">
               <ArrowBack />
             </IconButton>
           </Box>
