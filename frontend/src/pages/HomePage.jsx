@@ -8,9 +8,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [
-  'https://w.wallhaven.cc/full/7p/wallhaven-7pzj1y.png',
-  'https://w.wallhaven.cc/full/ex/wallhaven-exmxpw.jpg',
-  'https://w.wallhaven.cc/full/d6/wallhaven-d6y12l.jpg'
+  '/src/assets/hp1.jpg',
+  '/src/assets/hp2.jpg',
+  '/src/assets/hp3.jpg',
 ];
 
 const HomePage = () => {
