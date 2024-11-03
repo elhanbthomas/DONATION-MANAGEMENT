@@ -17,10 +17,10 @@ export default function LoginPage() {
             localStorage.setItem("refreshToken", res.data.refresh)
             navigate("/dashboard")
         } catch (err) {
-        setError("Invalid Credentials")
+            setError("Invalid Credentials")
         }
     }
     return (
-        <UserPassForm pageType="login" handleSubmit={handleSubmit} error={error}/>
+        <UserPassForm pageType="login" handleSubmit={handleSubmit} error={error} goBack={() => { navigate("/") }} />
     )
 }

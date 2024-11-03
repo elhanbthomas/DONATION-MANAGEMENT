@@ -37,7 +37,7 @@ export default function RegistrationPage() {
         }
     }
     return <>
-        {page1 && <UserPassForm pageType="register" handleSubmit={handlePage1} />}
+        {page1 && <UserPassForm pageType="register" handleSubmit={handlePage1} goBack={() => { navigate("/") }} />}
         {!page1 && <Stack
             sx={{
                 justifyContent: 'center',
@@ -46,9 +46,9 @@ export default function RegistrationPage() {
             }}
         >
             <Card variant="outlined" sx={{ p: 4, width: '60%', minWidth: '500px' }}>
-                <Stack sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', pb: 4, gap:2}}>
-                    <IconButton onClick={() => {setPage1(true)}}> 
-                        <ArrowBack size="small"/>
+                <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pb: 4, gap: 2 }}>
+                    <IconButton onClick={() => { setPage1(true) }}>
+                        <ArrowBack size="small" />
                     </IconButton>
                     <Typography
                         component="h1"
