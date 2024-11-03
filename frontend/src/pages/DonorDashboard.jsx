@@ -54,7 +54,7 @@ function DonorDashboard({ session, authentication, router, appTheme, branding })
     }, [])
 
     const renderDashboard = (pathname) => {
-        if (pathname === '/new-donation') return <NewItemPickup goBack={() => router.navigate('/donation')} />
+        if (pathname === '/new-donation') return <NewItemPickup goBack={() => { router.navigate('/donor'); getDonorPickups() }} />
         return <ItemPickupList afterConfirmFn={reqVolPickup} buttonText={"Request Pickup"} items={items} />
     }
 
