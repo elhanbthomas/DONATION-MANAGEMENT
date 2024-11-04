@@ -339,10 +339,12 @@ def mark_received(request):
                 shipment.save()
                 
                 try:
+                    count = Inventory.objects.count()
+                    id = "I" + str(count+1)
                     inventory, created = Inventory.objects.get_or_create(
                         center=volunteer.Center_id, 
                         item_type=c_request.item_type,
-                        defaults={'quantity':c_request.quantity}
+                        defaults={'quantity':c_request.quantity, 'inventory_id':id}
                         )
                     if not created:
                         inventory.quantity += c_request.quantity
