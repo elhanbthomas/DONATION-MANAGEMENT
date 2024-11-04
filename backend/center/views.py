@@ -287,6 +287,16 @@ def accept_request(request):
             if inventory.quantity >= center_request.quantity:
                 inventory.quantity -= center_request.quantity
                 inventory.save()
+                
+                to_center = center_request.center
+                count = Inventory.objects.count()
+                id = "I" + str(count+1)
+                inv, created = Inventory.objects.get_or_create(center=to_center, item_type=center_request.item_type, defaults={
+                    "quantity":center_request.quantity,
+                    })
+                if not created:
+                    inv.quantity += center_request.quantity
+                    inv.save()
             else:
                 return Response(
                     {'error': 'Not enough inventory to fulfill the request'},
