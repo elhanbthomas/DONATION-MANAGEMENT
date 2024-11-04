@@ -247,7 +247,7 @@ export default function NewItemPickup({ goBack }) {
                   {activeStep === 1 && (
                     <Box sx={{ mt: 2, mb: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                       <MuiFileInput value={formData.image} onChange={handleImageChange}
-                        inputProps={{ accept: '.png, .jpeg' }}
+                        inputProps={{ accept: '.png, .jpeg, .jpg' }}
                         placeholder="Upload Image"
                         clearIconButtonProps={{
                           onClick: () => setFormData({ ...formData, image: null, imagePreviewUrl: null }),
