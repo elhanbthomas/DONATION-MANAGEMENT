@@ -46,7 +46,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     id="name"
                     value={data.name}
                     onChange={(e) => setData({ ...data, name: e.target.value })}
-                    placeholder="Joe Mama"
+                    placeholder="Joe"
                 />
             </FormControl>
             <FormControl>
@@ -59,7 +59,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     id="name"
                     value={data.email}
                     onChange={(e) => setData({ ...data, email: e.target.value })}
-                    placeholder="joe.mama@mail.com"
+                    placeholder="joe@mail.com"
                 />
             </FormControl>
             <Divider />
