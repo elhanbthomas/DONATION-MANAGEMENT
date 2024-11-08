@@ -1,9 +1,46 @@
 import * as React from 'react';
 import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import PhoneNumberInput from './PhoneNumberInput';
-import { Save } from '@mui/icons-material';
+import { AccountBox } from '@mui/icons-material';
 
 export default function RegFormDonor({ handleSubmit }) {
+
+    React.useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setData((d) => {
+                    return {
+                        ...d,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }
+                });
+                console.log(position)
+            },
+            (error) => {
+                let errorMessage = 'An unknown error occurred';
+                switch (error.code) {
+                    case 1:
+                        errorMessage = 'Permission denied. Please allow location access.';
+                        break;
+                    case 2:
+                        errorMessage = 'Position unavailable. Please try again.';
+                        break;
+                    case 3:
+                        errorMessage = 'Location request timed out. Please try again.';
+                        break;
+                }
+                alert(errorMessage)
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
+
+    }, [])
+
     const [data, setData] = React.useState({
         name: '',
         email: '',
@@ -11,6 +48,8 @@ export default function RegFormDonor({ handleSubmit }) {
         district: '',
         address: '',
         pincode: '',
+        latitude: null,
+        longitude: null,
         phone: [],
     })
 
@@ -33,7 +72,7 @@ export default function RegFormDonor({ handleSubmit }) {
                     id="name"
                     value={data.name}
                     onChange={(e) => setData({ ...data, name: e.target.value })}
-                    placeholder="Joe Mama"
+                    placeholder="Joe"
                 />
             </FormControl>
             <FormControl>
@@ -46,7 +85,7 @@ export default function RegFormDonor({ handleSubmit }) {
                     id="email"
                     value={data.email}
                     onChange={(e) => setData({ ...data, email: e.target.value })}
-                    placeholder="joe.mama@mail.com"
+                    placeholder="joe@mail.com"
                 />
             </FormControl>
             <Divider />
@@ -81,7 +120,8 @@ export default function RegFormDonor({ handleSubmit }) {
                     required
                     fullWidth
                     id="address"
-                    multiline={true}
+                    multiline
+                    rows={4}
                     value={data.address}
                     onChange={(e) => setData({ ...data, address: e.target.value })}
                 />
@@ -90,6 +130,7 @@ export default function RegFormDonor({ handleSubmit }) {
                 <FormLabel htmlFor="pincode">Pincode</FormLabel>
                 <TextField
                     name="pincode"
+                    type='number'
                     required
                     fullWidth
                     id="pincode"
@@ -100,7 +141,7 @@ export default function RegFormDonor({ handleSubmit }) {
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
             <FormControl fullWidth sx={{ mt: 2 }}>
-                <Button variant="outlined" type="submit" startIcon={<Save size="small" />} >Submit</Button>
+                <Button variant="outlined" type="submit" startIcon={<AccountBox size="small" />} >Submit</Button>
             </FormControl>
         </Box>
     )

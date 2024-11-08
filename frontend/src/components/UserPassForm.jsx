@@ -1,12 +1,15 @@
-import { Login, Save } from '@mui/icons-material';
-import { InputLabel, FormControl, TextField, Stack, Card, Typography, Box, Button } from '@mui/material';
-import * as React from 'react';
+import { Button, Card, FormControl, TextField, Box, Stack, Alert, Select, MenuItem } from '@mui/material';
+import { ArrowBack, Login } from '@mui/icons-material';
+import React from 'react';
 
-export default function UserPassForm({ pageType, handleSubmit }) {
+export default function UserPassForm({ pageType, handleSubmit, error, goBack }) {
     const [data, setData] = React.useState({
         username: '',
-        password: ''
-    })
+        password: '',
+        confirmPassword: '',
+        userType: 'donor'
+    });
+
     return (
         <>
             <Stack
@@ -18,20 +21,42 @@ export default function UserPassForm({ pageType, handleSubmit }) {
                 }}
             >
                 <Card variant="outlined" sx={{ width: '60%', maxWidth: '500px', p: 4 }}>
+                    {/* Back Button */}
+                    <Button
+                        variant="text"
+                        onClick={goBack}
+                        startIcon={<ArrowBack />}
+                        sx={{ mb: 2 }}
+                    >
+                        Back
+                    </Button>
                     <Box
                         component="form"
                         onSubmit={(e) => {
-                            e.preventDefault()
+                            e.preventDefault();
                             if (pageType === 'register') {
                                 if (!data.confirmPassword || data.password !== data.confirmPassword) {
-                                    alert('Passwords do not match')
-                                    return
+                                    alert('Passwords do not match');
+                                    return;
                                 }
                             }
-                            handleSubmit(data)
+                            handleSubmit(data);
                         }}
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
+                        {error && <Alert severity='error'>{error}</Alert>}
+                        {pageType === 'register' && (
+                            <FormControl fullWidth>
+                                You are:
+                                <Select
+                                    value={data.userType}
+                                    onChange={(e) => setData({ ...data, userType: e.target.value })}
+                                >
+                                    <MenuItem value="donor">Donor</MenuItem>
+                                    <MenuItem value="volunteer">Volunteer</MenuItem>
+                                </Select>
+                            </FormControl>
+                        )}
                         <FormControl fullWidth>
                             <TextField
                                 autoComplete="username"
@@ -55,24 +80,28 @@ export default function UserPassForm({ pageType, handleSubmit }) {
                                 onChange={(e) => setData({ ...data, password: e.target.value })}
                             />
                         </FormControl>
-                        {pageType === 'register' && <FormControl fullWidth>
-                            <TextField
-                                autoComplete="password"
-                                name="password2"
-                                type="password"
-                                fullWidth
-                                id="password2"
-                                label="Confirm password"
-                                value={data.confirmPassword}
-                                onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
-                            />
-                        </FormControl>}
+                        {pageType === 'register' && (
+                            <FormControl fullWidth>
+                                <TextField
+                                    autoComplete="password"
+                                    name="password2"
+                                    type="password"
+                                    fullWidth
+                                    id="password2"
+                                    label="Confirm password"
+                                    value={data.confirmPassword}
+                                    onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
+                                />
+                            </FormControl>
+                        )}
                         <FormControl fullWidth sx={{ mt: 2 }}>
-                            <Button variant="outlined" type="submit" startIcon={<Login size="small" />} >{pageType === 'login' ? 'Sign In' : 'Sign Up'}</Button>
+                            <Button variant="outlined" type="submit" startIcon={<Login size="small" />} >
+                                {pageType === 'login' ? 'Sign In' : 'Sign Up'}
+                            </Button>
                         </FormControl>
                     </Box>
                 </Card>
-            </Stack >
+            </Stack>
         </>
     );
 }
