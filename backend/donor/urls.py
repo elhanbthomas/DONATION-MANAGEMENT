@@ -1,5 +1,5 @@
 from django.urls import path, include
 from . import views
 urlpatterns = [
-    path('', views.donor_view, name = 'donor-page')
+    path('donor/myrequests', views.donor_request_details, name='myrequest_details')
 ]

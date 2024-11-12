@@ -1,17 +1,30 @@
 import * as React from 'react';
+import axios from 'axios';
 import { Box, Button, Divider, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import PhoneNumberInput from './PhoneNumberInput';
-import { Save } from '@mui/icons-material';
+import { AccountBox } from '@mui/icons-material';
 
 export default function RegFormVolunteer({ handleSubmit }) {
+
+    const [centers, setCenters] = React.useState([]);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            const res = await axios.get('http://localhost:8000/api/center/list');
+            setCenters(res.data);
+        }
+        fetchData();
+    }, []);
+
     const [data, setData] = React.useState({
         name: '',
         email: '',
         city: '',
-        house_no: '',
+        address: '',
         phone: [],
         qualification: '',
         designation: '',
+        Center_id: '',
     })
 
     return (
@@ -33,7 +46,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     id="name"
                     value={data.name}
                     onChange={(e) => setData({ ...data, name: e.target.value })}
-                    placeholder="Joe Mama"
+                    placeholder="Joe"
                 />
             </FormControl>
             <FormControl>
@@ -46,7 +59,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                     id="name"
                     value={data.email}
                     onChange={(e) => setData({ ...data, email: e.target.value })}
-                    placeholder="joe.mama@mail.com"
+                    placeholder="joe@mail.com"
                 />
             </FormControl>
             <Divider />
@@ -63,19 +76,34 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 />
             </FormControl>
             <FormControl>
-                <FormLabel htmlFor="house">House No.</FormLabel>
+                <FormLabel htmlFor="address">Address</FormLabel>
                 <TextField
-                    name="house"
+                    name="address"
                     required
                     fullWidth
-                    id="house"
-                    value={data.house_no}
+                    id="address"
+                    value={data.address}
+                    multiline
+                    rows={4}
                     placeholder='9/11'
-                    onChange={(e) => setData({ ...data, house_no: e.target.value })}
+                    onChange={(e) => setData({ ...data, address: e.target.value })}
                 />
             </FormControl>
             <PhoneNumberInput addNumFn={(newNum) => setData({ ...data, phone: data.phone.concat(newNum) })} removeNumFn={(num) => setData({ ...data, phone: data.phone.filter((n) => n !== num) })} nums={data.phone} />
             <Divider />
+            <FormControl fullWidth>
+                <FormLabel >Center</FormLabel>
+                <Select
+                    value={centers.filter((c) => c.CenterID === data.Center_id)[0]?.name}
+                    onChange={(e) => setData({ ...data, Center_id: e.target.value })}
+                >
+                    {
+                        centers.map((center) => {
+                            return <MenuItem value={center.CenterID}>{center.name}</MenuItem>
+                        })
+                    }
+                </Select>
+            </FormControl>
             <FormControl fullWidth>
                 <FormLabel >Qualification</FormLabel>
                 <Select
@@ -99,7 +127,7 @@ export default function RegFormVolunteer({ handleSubmit }) {
                 </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-                <Button variant="outlined" type="submit" startIcon={<Save size="small" />} >Submit</Button>
+                <Button variant="outlined" type="submit" startIcon={<AccountBox size="small" />} >Submit</Button>
             </FormControl>
         </Box>
     )

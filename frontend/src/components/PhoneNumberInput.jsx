@@ -15,7 +15,6 @@ export default function PhoneNumberInput({ addNumFn, removeNumFn, nums }) {
                 <TextField
                     autoComplete="phone"
                     name="phone"
-                    required
                     id="phone"
                     placeholder="123456789"
                     type="text"

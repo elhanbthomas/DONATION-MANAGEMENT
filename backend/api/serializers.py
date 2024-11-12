@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from center.models import Volounteer, PhoneVolounteer
+from center.models import Volounteer, PhoneVolounteer,Center
         
 # -------------------------------------------- VOLUNTEER REGISTRATION --------------------------------------
         
@@ -16,7 +16,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Volounteer
-        fields = ['name', 'email', 'city', 'house_no', 'phone', 'qualification', 'designation']
+        fields = ['name', 'email', 'city', 'address', 'phone', 'qualification', 'designation', 'Center_id']
     
 
 class VolunteerRegistrationSerializer(serializers.ModelSerializer):
@@ -50,9 +50,10 @@ class VolunteerRegistrationSerializer(serializers.ModelSerializer):
             name = profile_data['name'],
             email = profile_data['email'],
             city = profile_data['city'],
-            house_no = profile_data['house_no'],
+            address = profile_data['address'],
             qualification = profile_data['qualification'],
-            designation = profile_data['designation']
+            designation = profile_data['designation'],
+            Center_id = profile_data['Center_id']
         )
         for num in phone_number:
             PhoneVolounteer.objects.create(volunteer=volunteer, **num)
@@ -73,7 +74,7 @@ class DonorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Donor
-        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address']
+        fields = ['name', 'email', 'phone', 'district', 'city', 'pincode', 'address', 'latitude', 'longitude']
 
 class DonorRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only = True)
@@ -108,10 +109,24 @@ class DonorRegistrationSerializer(serializers.ModelSerializer):
             city = profile_data['city'],
             district = profile_data['district'],
             address = profile_data['address'],
-            pincode = profile_data['pincode']
+            pincode = profile_data['pincode'],
+            latitude = profile_data['latitude'],
+            longitude = profile_data['longitude']
         )
-        
         for num in phone_number:
             PhoneDonor.objects.create(donor=donor, **num)
         
         return user
+
+
+
+class DonorDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        exclude = ['user']
+
+
+class VolunteerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Volounteer
+        exclude = ['user']
