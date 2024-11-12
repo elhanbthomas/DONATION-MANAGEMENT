@@ -4,23 +4,25 @@ A DBMS group project (SEM III)
 
 ## Cloning
 <pre>
-  make sure git is installed using the command    git --version  
+  make sure git is installed using the command    <b><i>git --version</i></b>  
   open your desired directory in your command prompt to which the repository has to be cloned  
-  enter the command    git clone "repository link"
+  enter the command    <b><i>git clone "repository link"</i></b>
 </pre>
 
 ## Installations for django
 <pre>
-  install virtual environment in the same folder containing frontend and backend    python -m venv venv  
-  activate virtual environment  .\venv\Scripts\activate  
+  install virtual environment in the same folder containing frontend and backend    <b><i>python -m venv venv</i></b>
+                                                                                    
+  activate virtual environment    <b><i>.\venv\Scripts\activate</i></b>  
   change directory to backend  
-  install dependencies using the command       pip install -r requirements.txt 
+  install dependencies using the command    <b><i>pip install -r requirements.txt</i></b> 
 </pre> 
 
 ## Installation for react
 <pre>
   change directory to frontend  
-  enter the command npm install  
+  instal packages using the command  <b><i>npm i</i></b>
+  enter the command       <b><i>npm install</i></b> 
 </pre>
 
 
