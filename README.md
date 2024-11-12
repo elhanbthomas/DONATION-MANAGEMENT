@@ -6,7 +6,7 @@ A DBMS group project (SEM III)
 <pre>
   make sure git is installed using the command    <b><i>git --version</i></b>  
   open your desired directory in your command prompt to which the repository has to be cloned  
-  enter the command    <b><i>git clone "repository link"</i></b>
+  enter the command    <b><i>git clone "https://github.com/elhanbthomas/DONATION-MANAGEMENT.git"</i></b>
 </pre>
 
 ## Installations for django
