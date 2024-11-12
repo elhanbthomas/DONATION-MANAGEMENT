@@ -22,7 +22,7 @@ A DBMS group project (SEM III)
 <pre>
   change directory to frontend  
   instal packages using the command  <b><i>npm i</i></b>
-  enter the command       <b><i>npm install</i></b> 
+  enter command  <b><i>npm run dev</i></b> 
 </pre>
 
 
